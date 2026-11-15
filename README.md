@@ -4,6 +4,19 @@ A modern, responsive, and highly interactive frontend web application built stri
 
 ---
 
+## 🌐 Live Hosted Links
+
+* **Primary Direct Cloudflare Link (Zero Passwords / Instant Access):**
+  👉 **[https://doctors-funk-hospitals-toronto.trycloudflare.com](https://doctors-funk-hospitals-toronto.trycloudflare.com)**
+
+* **Alternative Local Tunnel Link:**
+  👉 **[https://aetheria-art.loca.lt](https://aetheria-art.loca.lt)** *(Tunnel Password: `117.251.86.143`)*
+
+* **Local Machine Access:**
+  👉 **[http://localhost:3000](http://localhost:3000)**
+
+---
+
 ## 🌟 Key Features & Implemented Workflows
 
 ### 1. Navigation Bar & Hero Showcase
