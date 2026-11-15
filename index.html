@@ -1,1 +1,2884 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AETHERIA — Curated Digital Art Marketplace & Gallery</title>
+  <meta name="description"
+    content="Discover, collect, and trade extraordinary curated digital artworks, 3D renders, and generative masterworks. Built with HTML, CSS, and JavaScript." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b5cf6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 2 7 12 12 22 7 12 2'></polygon><polyline points='2 17 12 22 22 17'></polyline><polyline points='2 12 12 17 22 12'></polyline></svg>" />
+
+  <!-- Google Fonts: Space Grotesk & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Application Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+
+<body>
+
+  <!-- ======================================================================
+       Sticky Glassmorphic Navigation Bar
+       ====================================================================== -->
+  <header class="navbar glass">
+    <div class="container nav-container">
+
+      <!-- Brand Logo -->
+      <a class="brand-logo" id="brand-home-btn" role="button">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">
+            <span>AETHERIA</span>
+            <span class="brand-tag">Curated</span>
+          </div>
+          <div class="brand-sub">Digital Art Marketplace</div>
+        </div>
+      </a>
+
+      <!-- Real-time Navbar Search -->
+      <div class="nav-search">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="global-search-input" class="search-input"
+          placeholder="Search masterworks, artists, or styles (e.g. Octane)..." />
+        <button id="search-clear-btn" class="search-clear-btn" title="Clear Search">✕</button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="nav-links">
+        <button id="nav-gallery-btn" class="nav-btn active">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+          </svg>
+          <span>Gallery</span>
+        </button>
+
+        <button id="nav-favorites-btn" class="nav-btn">
+          <svg id="nav-heart-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+            </path>
+          </svg>
+          <span>Favorites</span>
+          <span id="nav-fav-count" class="cat-count">0</span>
+        </button>
+
+        <button id="nav-admin-btn" class="nav-btn admin-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          <span>Admin Studio</span>
+          <span class="admin-pill">CRUD</span>
+        </button>
+      </nav>
+
+      <!-- Utilities & Actions -->
+      <div style="display: flex; align-items: center; gap: 0.65rem;">
+
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle-btn" class="nav-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Theme">
+          <span id="theme-icon-slot">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+        </button>
+
+        <!-- Orders History Trigger -->
+        <button id="orders-trigger-btn" class="nav-btn" title="Order Receipts & Vault" aria-label="Order History">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"></path>
+            <line x1="16" y1="8" x2="8" y2="8"></line>
+            <line x1="16" y1="12" x2="8" y2="12"></line>
+            <line x1="11" y1="16" x2="8" y2="16"></line>
+          </svg>
+        </button>
+
+        <!-- Cart Drawer Trigger -->
+        <button id="cart-trigger-btn" class="cart-trigger">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Cart</span>
+          <span id="cart-badge-count" class="cart-badge">0</span>
+        </button>
+
+        <!-- User Profile / Auth Button -->
+        <div style="position: relative;">
+          <button id="user-profile-btn" class="profile-btn">
+            <img id="nav-user-avatar" src="" alt="User" class="profile-avatar" />
+            <div style="text-align: left; line-height: 1.15;" class="desktop-only">
+              <div id="nav-user-name" style="font-weight: 700; font-size: 0.8rem;">Alex Vance</div>
+              <div id="nav-user-role" style="font-size: 0.65rem; color: var(--brand-violet);">Collector</div>
+            </div>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- User Dropdown Menu -->
+          <div id="user-dropdown-menu" class="profile-dropdown glass-heavy">
+            <div style="padding-bottom: 0.65rem; border-bottom: 1px solid var(--border-subtle); margin-bottom: 0.5rem;">
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Signed in as</div>
+              <div id="dropdown-user-name" style="font-weight: 800; font-size: 0.95rem; margin-top: 0.1rem;">Alex Vance
+              </div>
+              <div id="dropdown-user-email" style="font-size: 0.75rem; color: var(--text-muted);">alex@collector.io
+              </div>
+              <div id="dropdown-user-badge" class="brand-tag" style="display: inline-block; margin-top: 0.4rem;">
+                Verified Collector</div>
+            </div>
+
+            <div
+              style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding: 0.4rem 0.25rem;">
+              Switch Demo Role:
+            </div>
+            <button id="switch-role-collector" class="nav-btn" style="width: 100%; justify-content: space-between;">
+              <span>Collector / Buyer View</span>
+              <span id="role-dot-collector"
+                style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-violet);"></span>
+            </button>
+            <button id="switch-role-admin" class="nav-btn" style="width: 100%; justify-content: space-between;">
+              <span>Curator / Admin View</span>
+              <span id="role-dot-admin"
+                style="width: 6px; height: 6px; border-radius: 50%; background: transparent;"></span>
+            </button>
+
+            <div style="margin: 0.5rem 0; border-top: 1px solid var(--border-subtle);"></div>
+
+            <button id="dropdown-orders-btn" class="nav-btn" style="width: 100%;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"></path>
+              </svg>
+              <span>Order History & Receipts</span>
+            </button>
+
+            <button id="dropdown-admin-btn" class="nav-btn" style="width: 100%;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>
+              <span>Admin Studio Panel</span>
+            </button>
+
+            <div style="margin: 0.5rem 0; border-top: 1px solid var(--border-subtle);"></div>
+
+            <button id="dropdown-logout-btn" class="nav-btn" style="width: 100%; color: var(--brand-rose);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       Hero Showcase Section (Spotlight Drop)
+       ====================================================================== -->
+  <section id="hero-section" class="hero-section">
+    <div class="hero-ambient-glow"></div>
+    <div class="container">
+
+      <div class="spotlight-card glass-heavy glow-violet">
+
+        <!-- Left Content Column -->
+        <div>
+          <div class="spotlight-header">
+            <span class="drop-badge">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="2">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <span>Spotlight Drop #01</span>
+            </span>
+
+            <span class="countdown-box">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>Drop Closes:</span>
+              <span id="hero-countdown" class="countdown-time">14h : 28m : 45s</span>
+            </span>
+          </div>
+
+          <h1 id="hero-title" class="spotlight-title font-heading">
+            Chronicles of the Astral Citadel
+          </h1>
+
+          <p id="hero-desc" class="spotlight-desc">
+            A monumental speculative architecture floating within an interstellar nebula. Crafted with high-density
+            procedural geometry, physical volumetric cloud simulations, and photorealistic raytraced sub-surface
+            scattering.
+          </p>
+
+          <!-- Artist Row -->
+          <div class="artist-row">
+            <img id="hero-artist-avatar" src="" alt="Artist" class="artist-avatar-lg" />
+            <div class="artist-meta">
+              <h4 id="hero-artist-name">Elena Rostova</h4>
+              <p><span id="hero-artist-handle">@elena_3d</span> • <span id="hero-category-tag"
+                  style="color: var(--brand-cyan);">3D Renders</span></p>
+            </div>
+            <div style="margin-left: auto; text-align: right;">
+              <div style="font-size: 0.68rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+                Edition</div>
+              <div id="hero-edition-tag" style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary);">1 of
+                1 Masterpiece</div>
+            </div>
+          </div>
+
+          <!-- Technical Specs Chips -->
+          <div class="specs-grid">
+            <div class="spec-chip">
+              <span>Resolution</span>
+              <strong id="hero-res-spec">7680 × 4320 (8K)</strong>
+            </div>
+            <div class="spec-chip">
+              <span>Format</span>
+              <strong id="hero-format-spec">Blender + 8K OpenEXR</strong>
+            </div>
+            <div class="spec-chip">
+              <span>Software</span>
+              <strong id="hero-software-spec">Blender 4.2 / Octane</strong>
+            </div>
+          </div>
+
+          <!-- Actions & Price -->
+          <div class="spotlight-actions">
+            <div class="price-pill">
+              <span>Reserve Price</span>
+              <strong><span id="hero-price-usd">$340</span> <span id="hero-price-eth" class="price-eth">≈ 0.14
+                  ETH</span></strong>
+            </div>
+
+            <button id="hero-add-cart-btn" class="btn-primary" style="flex: 1;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span>Instant Add to Cart</span>
+            </button>
+
+            <button id="hero-inspect-btn" class="btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <span>Inspect</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Media Showcase Column -->
+        <div class="spotlight-media" id="hero-media-box">
+          <img id="hero-art-img" src="" alt="Featured Art" class="spotlight-img" />
+
+          <div class="media-badge-top">
+            <span class="cat-pill active" style="font-size: 0.72rem; padding: 0.3rem 0.75rem;">
+              ✦ Ultra HD Master Asset
+            </span>
+            <span id="hero-rating-badge" class="brand-tag" style="background: rgba(0,0,0,0.6); color: #fff;">
+              ★ 4.9
+            </span>
+          </div>
+
+          <div class="media-overlay-bottom">
+            <div>
+              <div id="hero-overlay-title" style="font-weight: 700; font-size: 0.9rem;">Chronicles of the Astral Citadel
+              </div>
+              <div id="hero-overlay-format" style="font-size: 0.72rem; color: var(--text-secondary);">Blender (.blend) +
+                8K OpenEXR</div>
+            </div>
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--brand-cyan);">Click to Zoom ↗</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Digital Art Catalogue (Categories, Filters, Search & Sort)
+       ====================================================================== -->
+  <main id="main-content" class="container">
+
+    <!-- Gallery Header & Filters -->
+    <section class="filter-section">
+
+      <!-- Section Title -->
+      <div
+        style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 class="font-heading" style="font-size: 2rem; font-weight: 800;">Curated Catalogue</h2>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Explore rare 3D renders, generative masterworks, and cyberpunk conceptual art.
+          </p>
+        </div>
+        <div id="active-filters-info" class="results-count-badge">
+          Showing <span id="display-results-count" style="font-weight: 800; color: var(--text-primary);">14</span>
+          Masterworks
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div id="category-pills-bar" class="category-pills">
+        <!-- Rendered by JS: All, 3D Renders, Abstract & Generative, Cyberpunk & Sci-Fi, Illustrations, Photography -->
+      </div>
+
+      <!-- Filter Controls Strip -->
+      <div class="filter-strip glass">
+
+        <!-- Live Catalogue Search -->
+        <div class="filter-group" style="flex: 1; max-width: 320px;">
+          <input type="text" id="catalogue-search-input" class="search-input"
+            placeholder="Filter by title or artist..." />
+        </div>
+
+        <!-- Price Range Slider -->
+        <div class="price-slider-box">
+          <label for="price-range-slider">Max Price:</label>
+          <input type="range" id="price-range-slider" min="150" max="600" step="10" value="600" />
+          <span id="price-slider-label" class="price-val">$600</span>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <div class="filter-group">
+          <label for="sort-dropdown"
+            style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Sort:</label>
+          <select id="sort-dropdown" class="sort-select">
+            <option value="featured">Featured Curations</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Highest Rated ★</option>
+          </select>
+        </div>
+
+        <!-- Reset Filters Button -->
+        <button id="reset-filters-btn" class="nav-btn" style="color: var(--brand-rose); display: none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+          </svg>
+          <span>Reset</span>
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- Artworks Grid -->
+    <div id="artworks-grid" class="gallery-grid">
+      <!-- Dynamically Injected Artworks Cards -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state-box" style="display: none; text-align: center; padding: 4rem 1rem;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🎨</div>
+      <h3 class="font-heading" style="font-size: 1.5rem; font-weight: 700;">No Artworks Found</h3>
+      <p style="color: var(--text-muted); max-width: 420px; margin: 0.5rem auto 1.5rem;">
+        No masterworks matched your current search and filter settings. Try adjusting your price slider or search term.
+      </p>
+      <button id="empty-reset-btn" class="btn-primary">
+        Reset All Filters
+      </button>
+    </div>
+
+    <!-- ======================================================================
+         Admin Dashboard Panel (Full CRUD Control)
+         ====================================================================== -->
+    <section id="admin-section" class="admin-section" style="display: none;">
+
+      <div
+        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <div style="display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
+            <span class="admin-pill" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;">Curator Suite</span>
+            <span style="font-size: 0.8rem; color: var(--brand-cyan); font-weight: 600;">Full CRUD Management</span>
+          </div>
+          <h2 class="font-heading" style="font-size: 2.2rem; font-weight: 800;">Admin Gallery Studio</h2>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">
+            Create, update, inspect, and remove curated masterworks from the live catalogue.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <button id="admin-reset-catalogue-btn" class="btn-secondary" title="Restore Default 14 Artworks">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            <span>Restore Master Collection</span>
+          </button>
+
+          <button id="admin-add-art-btn" class="btn-primary btn-cyan">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Add New Artwork</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Stats KPI Cards -->
+      <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+          <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+            Platform Volume</div>
+          <div id="stat-revenue" class="admin-stat-num">$14,820</div>
+          <div style="font-size: 0.75rem; color: var(--brand-emerald); font-weight: 600;">+24.6% vs previous cycle</div>
+        </div>
+
+        <div class="admin-stat-card">
+          <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Active
+            Artworks</div>
+          <div id="stat-active-artworks" class="admin-stat-num">14</div>
+          <div style="font-size: 0.75rem; color: var(--brand-cyan); font-weight: 600;">Live across 5 categories</div>
+        </div>
+
+        <div class="admin-stat-card">
+          <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Total
+            Orders Fulfilled</div>
+          <div id="stat-total-orders" class="admin-stat-num">28</div>
+          <div style="font-size: 0.75rem; color: var(--brand-violet); font-weight: 600;">100% digital instant delivery
+          </div>
+        </div>
+
+        <div class="admin-stat-card">
+          <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+            Collector Satisfaction</div>
+          <div id="stat-avg-rating" class="admin-stat-num">4.9 ★</div>
+          <div style="font-size: 0.75rem; color: var(--brand-gold); font-weight: 600;">Based on verified reviews</div>
+        </div>
+      </div>
+
+      <!-- Admin Management Table -->
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Artwork Preview & Title</th>
+              <th>Artist</th>
+              <th>Category</th>
+              <th>Price (USD / ETH)</th>
+              <th>Rating</th>
+              <th>Spotlight Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-table-body">
+            <!-- Dynamically populated rows -->
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ======================================================================
+         Favorites Section
+         ====================================================================== -->
+    <section id="favorites-section" style="display: none; padding-bottom: 4rem;">
+      <div style="margin-bottom: 2rem;">
+        <h2 class="font-heading" style="font-size: 2rem; font-weight: 800;">Saved Favorites</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          Your personal wishlist of curated artworks.
+        </p>
+      </div>
+
+      <div id="favorites-grid" class="gallery-grid">
+        <!-- Liked items -->
+      </div>
+
+      <div id="empty-favorites-box" style="display: none; text-align: center; padding: 4rem 1rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🤍</div>
+        <h3 class="font-heading" style="font-size: 1.5rem; font-weight: 700;">No Saved Favorites Yet</h3>
+        <p style="color: var(--text-muted); max-width: 420px; margin: 0.5rem auto 1.5rem;">
+          Tap the heart icon on any artwork card in the gallery to curate your personal collection.
+        </p>
+        <button id="fav-browse-btn" class="btn-primary">
+          Explore Gallery
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================
+       Slide-Over Shopping Cart Drawer
+       ====================================================================== -->
+  <div id="cart-overlay" class="cart-overlay">
+    <aside class="cart-drawer" id="cart-drawer">
+
+      <!-- Cart Header -->
+      <div class="cart-header">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Collector Bag</span>
+          <span id="cart-header-count" class="cat-count">0</span>
+        </h3>
+        <button id="cart-close-btn" class="cart-close-btn" aria-label="Close Cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Items Container -->
+      <div id="cart-items-list" class="cart-items-container">
+        <!-- Dynamically injected cart items -->
+      </div>
+
+      <!-- Empty Cart Message -->
+      <div id="cart-empty-view" style="display: none; text-align: center; padding: 4rem 1.5rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🛍️</div>
+        <h4 style="font-weight: 700; font-size: 1.2rem;">Your Bag is Empty</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1.5rem;">
+          You haven't selected any curated digital masterworks yet.
+        </p>
+        <button id="cart-empty-explore-btn" class="btn-primary" style="width: 100%;">
+          Start Exploring
+        </button>
+      </div>
+
+      <!-- Cart Footer / Breakdown -->
+      <div id="cart-footer-box" class="cart-footer">
+
+        <!-- Promo Code Input -->
+        <div class="promo-row">
+          <input type="text" id="promo-code-input" class="promo-input" placeholder="Promo code (try 'NEO2026')" />
+          <button id="promo-apply-btn" class="btn-secondary" style="padding: 0.55rem 0.95rem; font-size: 0.78rem;">
+            Apply
+          </button>
+        </div>
+        <div id="promo-status-msg" style="font-size: 0.75rem; color: var(--brand-emerald); display: none;">
+          ✓ Code NEO2026 applied: 10% collector discount
+        </div>
+
+        <!-- Breakdown calculations -->
+        <div class="breakdown-row">
+          <span>Subtotal</span>
+          <span id="cart-subtotal-val">$0</span>
+        </div>
+
+        <div id="cart-discount-row" class="breakdown-row" style="display: none; color: var(--brand-emerald);">
+          <span>Promo Discount</span>
+          <span id="cart-discount-val">-$0</span>
+        </div>
+
+        <div class="breakdown-row">
+          <span>Platform & Provenance Fee (2.5%)</span>
+          <span id="cart-fee-val">$0</span>
+        </div>
+
+        <div class="breakdown-row total-row">
+          <span>Total Investment</span>
+          <span id="cart-total-val" style="color: var(--brand-cyan);">$0</span>
+        </div>
+
+        <button id="cart-checkout-btn" class="btn-primary checkout-btn">
+          <span>Proceed to Checkout</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- ======================================================================
+       Artwork Detail View & Reviews Modal
+       ====================================================================== -->
+  <div id="detail-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <button id="detail-modal-close" class="modal-close-corner" aria-label="Close">✕</button>
+
+      <div class="detail-modal-layout">
+
+        <!-- Artwork High-Res Display -->
+        <div class="detail-img-box">
+          <img id="modal-art-img" src="" alt="Artwork Preview" class="detail-img" />
+          <div
+            style="position: absolute; bottom: 1rem; left: 1rem; right: 1rem; display: flex; justify-content: space-between;">
+            <span id="modal-category-badge" class="cat-pill active" style="font-size: 0.7rem;">Category</span>
+            <span id="modal-rating-pill" class="brand-tag" style="background: rgba(0,0,0,0.7); color: #fff;">★
+              4.9</span>
+          </div>
+        </div>
+
+        <!-- Right Side: Specs, License & Cart Action -->
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span id="modal-edition-tag"
+              style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--brand-cyan);">
+              1 of 1 Masterpiece
+            </span>
+            <span id="modal-created-date" style="font-size: 0.72rem; color: var(--text-muted);">Created Oct 2026</span>
+          </div>
+
+          <h2 id="modal-art-title" class="font-heading"
+            style="font-size: 1.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 0.85rem;">
+            Artwork Title
+          </h2>
+
+          <!-- Artist Card -->
+          <div class="artist-row" style="margin-bottom: 1.25rem;">
+            <img id="modal-artist-avatar" src="" alt="Artist Avatar" class="artist-avatar-lg"
+              style="width: 42px; height: 42px;" />
+            <div class="artist-meta">
+              <h4 id="modal-artist-name">Elena Rostova</h4>
+              <p id="modal-artist-handle">@elena_3d</p>
+            </div>
+            <div style="margin-left: auto;">
+              <span class="brand-tag" style="font-size: 0.65rem;">Verified Artist</span>
+            </div>
+          </div>
+
+          <p id="modal-artist-bio"
+            style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1rem; font-style: italic;">
+            Artist Bio statement
+          </p>
+
+          <p id="modal-art-desc"
+            style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
+            Narrative description of the artwork.
+          </p>
+
+          <!-- Technical Specs Grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 1.5rem;">
+            <div class="spec-chip">
+              <span>Resolution</span>
+              <strong id="modal-spec-res">7680 × 4320 (8K)</strong>
+            </div>
+            <div class="spec-chip">
+              <span>Format</span>
+              <strong id="modal-spec-format">Blender + OpenEXR</strong>
+            </div>
+            <div class="spec-chip">
+              <span>File Size</span>
+              <strong id="modal-spec-size">1.4 GB</strong>
+            </div>
+            <div class="spec-chip">
+              <span>Software Used</span>
+              <strong id="modal-spec-software">Blender 4.2 / Octane</strong>
+            </div>
+          </div>
+
+          <!-- License Selector Option -->
+          <div
+            style="margin-bottom: 1.5rem; background: var(--bg-surface-elevated); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.65rem;">
+              Select License Terms:
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+              <label style="flex: 1; display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="modal-license" value="personal" checked id="modal-lic-personal"
+                  style="margin-top: 0.2rem; accent-color: var(--brand-violet);" />
+                <div>
+                  <div style="font-size: 0.8rem; font-weight: 700;">Personal License</div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted);">Private digital displays, personal prints &
+                    portfolio.</div>
+                </div>
+              </label>
+
+              <label style="flex: 1; display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="modal-license" value="commercial" id="modal-lic-commercial"
+                  style="margin-top: 0.2rem; accent-color: var(--brand-violet);" />
+                <div>
+                  <div style="font-size: 0.8rem; font-weight: 700;">Commercial (2.2x)</div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted);">Commercial campaigns, broadcasting, UI &
+                    media production.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Pricing & Add to Cart -->
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+            <div>
+              <div style="font-size: 0.68rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+                Total Price</div>
+              <div style="font-size: 1.7rem; font-weight: 800; color: var(--text-primary);">
+                <span id="modal-calculated-price">$340</span>
+                <span id="modal-calculated-eth" class="price-eth">≈ 0.14 ETH</span>
+              </div>
+            </div>
+
+            <button id="modal-add-cart-btn" class="btn-primary" style="flex: 1;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span>Add to Cart</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Reviews & Ratings Section -->
+        <div class="reviews-section">
+
+          <div
+            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h3 class="font-heading" style="font-size: 1.35rem; font-weight: 800;">Collector Reviews & Ratings</h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">
+                Verified feedback from digital art collectors and exhibition curators.
+              </p>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 0.4rem;">
+              <span id="modal-avg-rating-val"
+                style="font-size: 1.6rem; font-weight: 800; color: var(--brand-gold);">4.9</span>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">/ 5.0 (<span id="modal-review-count">24</span>
+                verified)</span>
+            </div>
+          </div>
+
+          <!-- Interactive Review Submission Form -->
+          <div class="review-form-card">
+            <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem;">Leave a Collector Review</h4>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Share your assessment of file quality, textures, and aesthetic execution.
+            </p>
+
+            <form id="review-submit-form">
+              <label
+                style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 0.25rem;">
+                Select Rating (1 to 5 Stars):
+              </label>
+
+              <div id="star-rating-picker" class="star-rating-picker">
+                <button type="button" class="star-pick-btn active" data-rating="1">★</button>
+                <button type="button" class="star-pick-btn active" data-rating="2">★</button>
+                <button type="button" class="star-pick-btn active" data-rating="3">★</button>
+                <button type="button" class="star-pick-btn active" data-rating="4">★</button>
+                <button type="button" class="star-pick-btn active" data-rating="5">★</button>
+                <span id="star-rating-text"
+                  style="font-size: 0.85rem; font-weight: 700; margin-left: 0.5rem; align-self: center; color: var(--brand-gold);">
+                  5 Stars (Masterpiece)
+                </span>
+              </div>
+              <input type="hidden" id="selected-rating-val" value="5" />
+
+              <textarea id="review-comment-input" class="review-textarea"
+                placeholder="Write your constructive review (e.g., lighting fidelity, layer naming, resolution)..."
+                required></textarea>
+              <span id="review-error-msg" class="field-error-msg" style="display: none; margin-bottom: 0.75rem;">
+                Please enter a review comment before submitting.
+              </span>
+
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size: 0.75rem; color: var(--text-muted);">
+                  Posting as: <strong id="review-poster-name" style="color: var(--text-primary);">Alex Vance</strong>
+                </span>
+                <button type="submit" class="btn-primary" style="padding: 0.65rem 1.4rem; font-size: 0.82rem;">
+                  Submit Review
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Existing Reviews List -->
+          <div id="modal-reviews-list" class="reviews-list">
+            <!-- Dynamically populated reviews -->
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       Multi-Step Checkout Modal
+       ====================================================================== -->
+  <div id="checkout-modal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 680px;">
+      <button id="checkout-modal-close" class="modal-close-corner" aria-label="Close">✕</button>
+
+      <!-- Step Indicator Bar -->
+      <div class="checkout-steps-bar">
+        <div id="step-indicator-1" class="step-item active">
+          <span class="step-num">1</span>
+          <span>Billing Details</span>
+        </div>
+        <div style="width: 24px; height: 1px; background: var(--border-medium);"></div>
+        <div id="step-indicator-2" class="step-item">
+          <span class="step-num">2</span>
+          <span>Payment Method</span>
+        </div>
+        <div style="width: 24px; height: 1px; background: var(--border-medium);"></div>
+        <div id="step-indicator-3" class="step-item">
+          <span class="step-num">3</span>
+          <span>Digital Receipt</span>
+        </div>
+      </div>
+
+      <div class="checkout-body">
+
+        <!-- Step 1: Billing & Collector Details -->
+        <form id="checkout-step-1-form">
+          <h3 class="font-heading" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">
+            Collector & Billing Information
+          </h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            We will attach these details to your permanent cryptographic Certificate of Authenticity.
+          </p>
+
+          <div class="form-group">
+            <label for="checkout-name">Full Legal / Collector Name *</label>
+            <input type="text" id="checkout-name" class="form-input" placeholder="e.g. Alex Vance" required />
+            <span id="err-checkout-name" class="field-error-msg" style="display: none;">Name is required</span>
+          </div>
+
+          <div class="form-group">
+            <label for="checkout-email">Delivery & License Receipt Email *</label>
+            <input type="email" id="checkout-email" class="form-input" placeholder="e.g. alex@collector.io" required />
+            <span id="err-checkout-email" class="field-error-msg" style="display: none;">Valid email is required</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="checkout-country">Country of Residence *</label>
+              <select id="checkout-country" class="form-input" style="cursor: pointer;">
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Germany">Germany</option>
+                <option value="Japan">Japan</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Canada">Canada</option>
+                <option value="India">India</option>
+                <option value="Singapore">Singapore</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="checkout-wallet">Wallet / ENS Handle (Optional)</label>
+              <input type="text" id="checkout-wallet" class="form-input" placeholder="e.g. alex.eth or 0x71C..." />
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+            <div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Amount Due:</span>
+              <strong id="checkout-step1-total"
+                style="font-size: 1.25rem; color: var(--brand-cyan); margin-left: 0.35rem;">$0</strong>
+            </div>
+
+            <button type="submit" class="btn-primary">
+              <span>Continue to Payment</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </form>
+
+        <!-- Step 2: Payment Method Selector -->
+        <form id="checkout-step-2-form" style="display: none;">
+          <h3 class="font-heading" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">
+            Select Payment Method
+          </h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            Choose your preferred digital payment rails (Simulated Instant Sandbox).
+          </p>
+
+          <!-- Payment Tabs -->
+          <div class="payment-methods-grid">
+            <div class="payment-tab-btn active" data-method="card">
+              <div style="font-size: 1.4rem; margin-bottom: 0.25rem;">💳</div>
+              <div style="font-size: 0.8rem; font-weight: 700;">Credit / Debit</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);">Visa / Mastercard</div>
+            </div>
+
+            <div class="payment-tab-btn" data-method="upi">
+              <div style="font-size: 1.4rem; margin-bottom: 0.25rem;">⚡</div>
+              <div style="font-size: 0.8rem; font-weight: 700;">Instant UPI</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);">QR Code / UPI ID</div>
+            </div>
+
+            <div class="payment-tab-btn" data-method="crypto">
+              <div style="font-size: 1.4rem; margin-bottom: 0.25rem;">🦊</div>
+              <div style="font-size: 0.8rem; font-weight: 700;">Web3 Wallet</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);">MetaMask / Phantom</div>
+            </div>
+          </div>
+
+          <!-- Card Form View -->
+          <div id="payment-view-card">
+            <div class="form-group">
+              <label for="card-num">Card Number *</label>
+              <input type="text" id="card-num" class="form-input" placeholder="4242 •••• •••• 4242"
+                value="4242 8890 1234 5678" required />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label for="card-exp">Expiry (MM/YY) *</label>
+                <input type="text" id="card-exp" class="form-input" placeholder="12/28" value="10/28" required />
+              </div>
+              <div class="form-group">
+                <label for="card-cvc">CVC Security Code *</label>
+                <input type="text" id="card-cvc" class="form-input" placeholder="888" value="789" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- UPI Form View -->
+          <div id="payment-view-upi" style="display: none; text-align: center; padding: 1rem;">
+            <div
+              style="background: #fff; padding: 1rem; border-radius: 12px; display: inline-block; margin-bottom: 1rem;">
+              <!-- Simulated QR code -->
+              <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.8">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+                <line x1="14" y1="14" x2="14" y2="14.01"></line>
+                <line x1="17" y1="17" x2="17" y2="17.01"></line>
+                <line x1="20" y1="14" x2="20" y2="14.01"></line>
+                <line x1="20" y1="20" x2="20" y2="20.01"></line>
+              </svg>
+            </div>
+            <div class="form-group" style="max-width: 340px; margin: 0 auto;">
+              <label for="upi-id">Or enter UPI Virtual ID:</label>
+              <input type="text" id="upi-id" class="form-input" placeholder="collector@okhdfcbank"
+                value="alex@okaxis" />
+            </div>
+          </div>
+
+          <!-- Crypto Form View -->
+          <div id="payment-view-crypto"
+            style="display: none; text-align: center; padding: 1.5rem; background: var(--bg-surface-elevated); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 1.5rem;">
+            <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🔗</div>
+            <div style="font-weight: 700; font-size: 0.95rem;">Web3 Provider Connected</div>
+            <div style="font-size: 0.75rem; font-family: monospace; color: var(--brand-cyan); margin: 0.25rem 0;">
+              0x892a...c481 (Ethereum Mainnet)
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              Gas Estimate: &lt; 0.001 ETH (~$2.40)
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+            <button type="button" id="checkout-back-step1" class="btn-secondary">
+              Back
+            </button>
+
+            <button type="submit" id="checkout-pay-btn" class="btn-primary"
+              style="background: linear-gradient(135deg, var(--brand-emerald), #059669);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>Complete Payment & Unlock Master Files</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Step 3: Digital Download Receipt & Confirmation Screen -->
+        <div id="checkout-step-3-confirmation" class="order-success-screen" style="display: none;">
+          <div class="success-icon-badge">✓</div>
+
+          <h3 class="font-heading" style="font-size: 1.8rem; font-weight: 800; margin-bottom: 0.35rem;">
+            Order Confirmed & Provenance Verified!
+          </h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); max-width: 480px; margin: 0 auto;">
+            Thank you for your acquisition. Your high-resolution master asset bundle and Certificate of Authenticity are
+            ready for instant download.
+          </p>
+
+          <div
+            style="margin: 1.25rem 0; font-family: monospace; font-size: 0.85rem; color: var(--brand-cyan); font-weight: 700;">
+            Receipt ID: <span id="receipt-order-id">#AETH-9821-X</span>
+          </div>
+
+          <!-- Digital Asset Vault Download Buttons -->
+          <div class="download-vault-list" id="receipt-download-list">
+            <!-- Dynamically populated download items -->
+          </div>
+
+          <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
+            <button id="receipt-print-btn" class="btn-secondary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span>Print Official Receipt</span>
+            </button>
+
+            <button id="receipt-done-btn" class="btn-primary">
+              Return to Gallery
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       Admin Add / Edit Artwork Modal (Full CRUD)
+       ====================================================================== -->
+  <div id="admin-art-modal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 640px;">
+      <button id="admin-art-modal-close" class="modal-close-corner" aria-label="Close">✕</button>
+
+      <div style="padding: 2rem;">
+        <h3 id="admin-modal-title" class="font-heading"
+          style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.35rem;">
+          Add New Digital Artwork
+        </h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Publish a new digital masterwork to the live curated catalogue.
+        </p>
+
+        <form id="admin-artwork-form">
+          <input type="hidden" id="admin-form-art-id" value="" />
+
+          <div class="form-group">
+            <label for="admin-art-title">Artwork Title *</label>
+            <input type="text" id="admin-art-title" class="form-input" placeholder="e.g. Solaris Resonance" required />
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="admin-artist-name">Artist Name *</label>
+              <input type="text" id="admin-artist-name" class="form-input" placeholder="e.g. Elena Rostova" required />
+            </div>
+
+            <div class="form-group">
+              <label for="admin-artist-handle">Artist Handle *</label>
+              <input type="text" id="admin-artist-handle" class="form-input" placeholder="e.g. @elena_3d" required />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="admin-art-category">Category *</label>
+              <select id="admin-art-category" class="form-input" style="cursor: pointer;">
+                <option value="3D Renders">3D Renders</option>
+                <option value="Abstract & Generative">Abstract & Generative</option>
+                <option value="Cyberpunk & Sci-Fi">Cyberpunk & Sci-Fi</option>
+                <option value="Illustrations">Illustrations</option>
+                <option value="Photography">Photography</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="admin-art-price">Price in USD ($) *</label>
+              <input type="number" id="admin-art-price" class="form-input" min="50" max="5000" placeholder="350"
+                required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-art-image">Image URL (High-Res 3D / Render Placeholder) *</label>
+            <input type="url" id="admin-art-image" class="form-input" placeholder="https://images.unsplash.com/..."
+              required />
+            <div id="admin-img-preview-box" style="margin-top: 0.5rem; display: none;">
+              <img id="admin-img-preview" src="" alt="Live Preview"
+                style="width: 100%; height: 160px; object-fit: cover; border-radius: var(--radius-md);" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="admin-art-resolution">Resolution</label>
+              <input type="text" id="admin-art-resolution" class="form-input" placeholder="7680 × 4320 (8K)"
+                value="7680 × 4320 (8K)" />
+            </div>
+
+            <div class="form-group">
+              <label for="admin-art-format">File Formats</label>
+              <input type="text" id="admin-art-format" class="form-input" placeholder="Blender (.blend) + 8K OpenEXR"
+                value="Blender 4.2 + 8K TIFF" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-art-desc">Artwork Description</label>
+            <textarea id="admin-art-desc" class="review-textarea"
+              placeholder="Conceptual narrative, lighting description, and software tools..."></textarea>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+            <input type="checkbox" id="admin-art-featured"
+              style="accent-color: var(--brand-violet); width: 16px; height: 16px;" />
+            <label for="admin-art-featured" style="font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+              Set as Spotlight Drop Hero banner
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+            <button type="button" id="admin-cancel-btn" class="btn-secondary">
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary">
+              <span id="admin-submit-btn-text">Save Artwork to Catalogue</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       Delete Confirmation Dialog Modal
+       ====================================================================== -->
+  <div id="delete-confirm-modal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 440px; text-align: center; padding: 2rem;">
+      <div style="font-size: 2.8rem; margin-bottom: 1rem;">⚠️</div>
+      <h3 class="font-heading" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">
+        Remove Artwork?
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        Are you sure you want to permanently delete <strong id="delete-target-title"
+          style="color: var(--text-primary);">this artwork</strong> from the catalogue?
+      </p>
+
+      <div style="display: flex; justify-content: center; gap: 0.75rem;">
+        <button id="delete-cancel-btn" class="btn-secondary">
+          Cancel
+        </button>
+        <button id="delete-confirm-btn" class="btn-primary btn-danger">
+          Yes, Delete Artwork
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       User Registration & Sign In Modal (with Validation & Demo Logins)
+       ====================================================================== -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 480px;">
+      <button id="auth-modal-close" class="modal-close-corner" aria-label="Close">✕</button>
+
+      <div style="padding: 2rem;">
+
+        <!-- Toggle Tabs: Sign In vs Sign Up -->
+        <div class="auth-tabs">
+          <button type="button" id="auth-tab-signin" class="auth-tab-btn active">Sign In</button>
+          <button type="button" id="auth-tab-signup" class="auth-tab-btn">Create Account</button>
+        </div>
+
+        <!-- Sign In Form -->
+        <form id="signin-form">
+          <div class="form-group">
+            <label for="signin-email">Collector Email *</label>
+            <input type="email" id="signin-email" class="form-input" placeholder="alex@collector.io" required />
+            <span id="err-signin-email" class="field-error-msg" style="display: none;">Valid email required</span>
+          </div>
+
+          <div class="form-group">
+            <label for="signin-password">Password *</label>
+            <input type="password" id="signin-password" class="form-input" placeholder="••••••••" required />
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.5rem;">
+            Sign In to Aetheria
+          </button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" style="display: none;">
+          <div class="form-group">
+            <label for="signup-name">Full Name *</label>
+            <input type="text" id="signup-name" class="form-input" placeholder="e.g. Jordan Cruz" required />
+            <span id="err-signup-name" class="field-error-msg" style="display: none;">Name is required</span>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email Address *</label>
+            <input type="email" id="signup-email" class="form-input" placeholder="jordan@collector.io" required />
+            <span id="err-signup-email" class="field-error-msg" style="display: none;">Enter a valid email
+              address</span>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-role">Account Type</label>
+            <select id="signup-role" class="form-input" style="cursor: pointer;">
+              <option value="collector">Digital Art Collector / Buyer</option>
+              <option value="admin">Curator / Gallery Admin</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Create Password (min 6 characters) *</label>
+            <input type="password" id="signup-password" class="form-input" placeholder="••••••••" required />
+            <div id="password-strength-indicator"
+              style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">
+              Password strength: <span id="pwd-strength-label" style="font-weight: 700;">None</span>
+            </div>
+            <span id="err-signup-password" class="field-error-msg" style="display: none;">Password must be at least 6
+              characters</span>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-confirm-password">Confirm Password *</label>
+            <input type="password" id="signup-confirm-password" class="form-input" placeholder="••••••••" required />
+            <span id="err-signup-confirm" class="field-error-msg" style="display: none;">Passwords must match</span>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.5rem;">
+            Create Collector Profile
+          </button>
+        </form>
+
+        <!-- Instant 1-Click Demo Logins -->
+        <div class="demo-login-box">
+          <div style="font-size: 0.75rem; text-align: center; color: var(--text-muted); font-weight: 600;">
+            Or instant test login with demo credentials:
+          </div>
+
+          <div class="demo-login-buttons">
+            <button type="button" id="demo-login-collector-btn" class="btn-secondary"
+              style="font-size: 0.75rem; padding: 0.6rem;">
+              👤 1-Click Collector
+            </button>
+            <button type="button" id="demo-login-admin-btn" class="btn-secondary admin-btn"
+              style="font-size: 0.75rem; padding: 0.6rem;">
+              🛡️ 1-Click Curator
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       Order History & Download Vault Modal
+       ====================================================================== -->
+  <div id="orders-modal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 720px;">
+      <button id="orders-modal-close" class="modal-close-corner" aria-label="Close">✕</button>
+
+      <div style="padding: 2rem;">
+        <h3 class="font-heading" style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.35rem;">
+          Order History & Digital Vault
+        </h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Permanent access to your purchased master files, RAW packages, and certificates.
+        </p>
+
+        <div id="orders-list-container" style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <!-- Dynamically populated past receipts -->
+        </div>
+
+        <div id="orders-empty-state" style="display: none; text-align: center; padding: 3rem 1rem;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🧾</div>
+          <div style="font-weight: 700; font-size: 1.1rem;">No Orders Yet</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem;">
+            Completed purchases and download links will be safely stored in this vault.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       Toast Notifications Container
+       ====================================================================== -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ======================================================================
+       Footer
+       ====================================================================== -->
+  <footer class="footer">
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div>
+          <div class="brand-logo" style="margin-bottom: 1rem;">
+            <div class="brand-icon" style="width: 36px; height: 36px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              </svg>
+            </div>
+            <span class="font-heading" style="font-size: 1.3rem; font-weight: 800;">AETHERIA</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; max-width: 320px;">
+            A premier digital art gallery and creative exchange connecting world-class 3D sculptors, generative artists,
+            and visionaries with global collectors.
+          </p>
+          <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--brand-cyan); font-weight: 600;">
+            ● Live on Ethereum & Decentralized Storage
+          </div>
+        </div>
+
+        <div>
+          <h4
+            style="font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Curated Categories</h4>
+          <ul
+            style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.82rem; color: var(--text-secondary);">
+            <li><a role="button" class="footer-cat-link" data-cat="3D Renders" style="cursor: pointer;">3D Renders</a>
+            </li>
+            <li><a role="button" class="footer-cat-link" data-cat="Abstract & Generative"
+                style="cursor: pointer;">Abstract & Generative</a></li>
+            <li><a role="button" class="footer-cat-link" data-cat="Cyberpunk & Sci-Fi"
+                style="cursor: pointer;">Cyberpunk & Sci-Fi</a></li>
+            <li><a role="button" class="footer-cat-link" data-cat="Illustrations" style="cursor: pointer;">Vector
+                Illustrations</a></li>
+            <li><a role="button" class="footer-cat-link" data-cat="Photography" style="cursor: pointer;">Fine Art
+                Photography</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4
+            style="font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Curator Tools</h4>
+          <ul
+            style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.82rem; color: var(--text-secondary);">
+            <li><a role="button" id="footer-admin-link" style="cursor: pointer; color: var(--brand-cyan);">Admin CRUD
+                Studio</a></li>
+            <li><a role="button" id="footer-orders-link" style="cursor: pointer;">Collector Receipts Vault</a></li>
+            <li><a role="button" id="footer-login-link" style="cursor: pointer;">Collector Sign In</a></li>
+            <li><a role="button" id="footer-reset-link" style="cursor: pointer;">Restore Master Artworks</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4
+            style="font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Drop Dispatch</h4>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+            Get notified when rare 1-of-1 masterworks and genesis collections drop.
+          </p>
+          <div style="display: flex; gap: 0.4rem;">
+            <input type="email" id="newsletter-email" class="promo-input" placeholder="collector@art.io" />
+            <button id="newsletter-submit-btn" class="btn-primary"
+              style="padding: 0.55rem 0.85rem; font-size: 0.75rem;">
+              Join
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        style="border-top: 1px solid var(--border-subtle); padding-top: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.75rem; color: var(--text-muted);">
+        <div>
+          © 2026 AETHERIA Gallery Inc. Crafted with pure HTML, CSS, and Vanilla JavaScript. All rights reserved.
+        </div>
+        <div style="display: flex; gap: 1.5rem;">
+          <span>Privacy & Provenance Policy</span>
+          <span>Terms of License</span>
+          <span>Security Status: 100% Operational</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Application Logic Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AETHERIA — Curated Digital Art Marketplace & Gallery</title>
+  <meta name="description"
+    content="Discover, collect, and trade extraordinary curated digital artworks, 3D renders, and generative masterworks. Built with HTML, CSS, and JavaScript." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b5cf6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 2 7 12 12 22 7 12 2'></polygon><polyline points='2 17 12 22 22 17'></polyline><polyline points='2 12 12 17 22 12'></polyline></svg>" />
+
+  <!-- Google Fonts: Space Grotesk & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Application Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+
+<body>
+
+  <!-- ======================================================================
+       Sticky Glassmorphic Navigation Bar
+       ====================================================================== -->
+  <header class="navbar glass">
+    <div class="container nav-container">
+
+      <!-- Brand Logo -->
+      <a class="brand-logo" id="brand-home-btn" role="button">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">
+            <span>AETHERIA</span>
+            <span class="brand-tag">Curated</span>
+          </div>
+          <div class="brand-sub">Digital Art Marketplace</div>
+        </div>
+      </a>
+
+      <!-- Real-time Navbar Search -->
+      <div class="nav-search">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="global-search-input" class="search-input"
+          placeholder="Search masterworks, artists, or styles (e.g. Octane)..." />
+        <button id="search-clear-btn" class="search-clear-btn" title="Clear Search">✕</button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="nav-links">
+        <button id="nav-gallery-btn" class="nav-btn active">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+          </svg>
+          <span>Gallery</span>
+        </button>
+
+        <button id="nav-favorites-btn" class="nav-btn">
+          <svg id="nav-heart-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+            </path>
+          </svg>
+          <span>Favorites</span>
+          <span id="nav-fav-count" class="cat-count">0</span>
+        </button>
+
+        <button id="nav-admin-btn" class="nav-btn admin-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          <span>Admin Studio</span>
+          <span class="admin-pill">CRUD</span>
+        </button>
+      </nav>
+
+      <!-- Utilities & Actions -->
+      <div style="display: flex; align-items: center; gap: 0.65rem;">
+
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle-btn" class="nav-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Theme">
+          <span id="theme-icon-slot">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+        </button>
+
+        <!-- Orders History Trigger -->
+        <button id="orders-trigger-btn" class="nav-btn" title="Order Receipts & Vault" aria-label="Order History">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"></path>
+            <line x1="16" y1="8" x2="8" y2="8"></line>
+            <line x1="16" y1="12" x2="8" y2="12"></line>
+            <line x1="11" y1="16" x2="8" y2="16"></line>
+          </svg>
+        </button>
+
+        <!-- Cart Drawer Trigger -->
+        <button id="cart-trigger-btn" class="cart-trigger">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Cart</span>
+          <span id="cart-badge-count" class="cart-badge">0</span>
+        </button>
+
+        <!-- User Profile / Auth Button -->
+        <div style="position: relative;">
+          <button id="user-profile-btn" class="profile-btn">
+            <img id="nav-user-avatar" src="" alt="User" class="profile-avatar" />
+            <div style="text-align: left; line-height: 1.15;" class="desktop-only">
+              <div id="nav-user-name" style="font-weight: 700; font-size: 0.8rem;">Alex Vance</div>
+              <div id="nav-user-role" style="font-size: 0.65rem; color: var(--brand-violet);">Collector</div>
+            </div>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          <!-- User Dropdown Menu -->
+          <div id="user-dropdown-menu" class="profile-dropdown glass-heavy">
+            <div style="padding-bottom: 0.65rem; border-bottom: 1px solid var(--border-subtle); margin-bottom: 0.5rem;">
+              <div style="font-size: 0.7rem; color: var(--text-muted);">Signed in as</div>
+              <div id="dropdown-user-name" style="font-weight: 800; font-size: 0.95rem; margin-top: 0.1rem;">Alex Vance
+              </div>
+              <div id="dropdown-user-email" style="font-size: 0.75rem; color: var(--text-muted);">alex@collector.io
+              </div>
+              <div id="dropdown-user-badge" class="brand-tag" style="display: inline-block; margin-top: 0.4rem;">
+                Verified Collector</div>
+            </div>
+
+            <div
+              style="font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); padding: 0.4rem 0.25rem;">
+              Switch Demo Role:
+            </div>
+            <button id="switch-role-collector" class="nav-btn" style="width: 100%; justify-content: space-between;">
+              <span>Collector / Buyer View</span>
+              <span id="role-dot-collector"
+                style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-violet);"></span>
+            </button>
+            <button id="switch-role-admin" class="nav-btn" style="width: 100%; justify-content: space-between;">
+              <span>Curator / Admin View</span>
+              <span id="role-dot-admin"
+                style="width: 6px; height: 6px; border-radius: 50%; background: transparent;"></span>
+            </button>
+
+            <div style="margin: 0.5rem 0; border-top: 1px solid var(--border-subtle);"></div>
+
+            <button id="dropdown-orders-btn" class="nav-btn" style="width: 100%;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"></path>
+              </svg>
+              <span>Order History & Receipts</span>
+            </button>
+
+            <button id="dropdown-admin-btn" class="nav-btn" style="width: 100%;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>
+              <span>Admin Studio Panel</span>
+            </button>
+
+            <div style="margin: 0.5rem 0; border-top: 1px solid var(--border-subtle);"></div>
+
+            <button id="dropdown-logout-btn" class="nav-btn" style="width: 100%; color: var(--brand-rose);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       Hero Showcase Section (Spotlight Drop)
+       ====================================================================== -->
+  <section id="hero-section" class="hero-section">
+    <div class="hero-ambient-glow"></div>
+    <div class="container">
+
+      <div class="spotlight-card glass-heavy glow-violet">
+
+        <!-- Left Content Column -->
+        <div>
+          <div class="spotlight-header">
+            <span class="drop-badge">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="2">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg>
+              <span>Spotlight Drop #01</span>
+            </span>
+
+            <span class="countdown-box">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>Drop Closes:</span>
+              <span id="hero-countdown" class="countdown-time">14h : 28m : 45s</span>
+            </span>
+          </div>
+
+          <h1 id="hero-title" class="spotlight-title font-heading">
+            Chronicles of the Astral Citadel
+          </h1>
+
+          <p id="hero-desc" class="spotlight-desc">
+            A monumental speculative architecture floating within an interstellar nebula. Crafted with high-density
+            procedural geometry, physical volumetric cloud simulations, and photorealistic raytraced sub-surface
+            scattering.
+          </p>
+
+          <!-- Artist Row -->
+          <div class="artist-row">
+            <img id="hero-artist-avatar" src="" alt="Artist" class="artist-avatar-lg" />
+            <div class="artist-meta">
+              <h4 id="hero-artist-name">Elena Rostova</h4>
+              <p><span id="hero-artist-handle">@elena_3d</span> • <span id="hero-category-tag"
+                  style="color: var(--brand-cyan);">3D Renders</span></p>
+            </div>
+            <div style="margin-left: auto; text-align: right;">
+              <div style="font-size: 0.68rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+                Edition</div>
+              <div id="hero-edition-tag" style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary);">1 of
+                1 Masterpiece</div>
+            </div>
+          </div>
+
+          <!-- Technical Specs Chips -->
+          <div class="specs-grid">
+            <div class="spec-chip">
+              <span>Resolution</span>
+              <strong id="hero-res-spec">7680 × 4320 (8K)</strong>
+            </div>
+            <div class="spec-chip">
+              <span>Format</span>
+              <strong id="hero-format-spec">Blender + 8K OpenEXR</strong>
+            </div>
+            <div class="spec-chip">
+              <span>Software</span>
+              <strong id="hero-software-spec">Blender 4.2 / Octane</strong>
+            </div>
+          </div>
+
+          <!-- Actions & Price -->
+          <div class="spotlight-actions">
+            <div class="price-pill">
+              <span>Reserve Price</span>
+              <strong><span id="hero-price-usd">$340</span> <span id="hero-price-eth" class="price-eth">≈ 0.14
+                  ETH</span></strong>
+            </div>
+
+            <button id="hero-add-cart-btn" class="btn-primary" style="flex: 1;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span>Instant Add to Cart</span>
+            </button>
+
+            <button id="hero-inspect-btn" class="btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <span>Inspect</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Media Showcase Column -->
+        <div class="spotlight-media" id="hero-media-box">
+          <img id="hero-art-img" src="" alt="Featured Art" class="spotlight-img" />
+
+          <div class="media-badge-top">
+            <span class="cat-pill active" style="font-size: 0.72rem; padding: 0.3rem 0.75rem;">
+              ✦ Ultra HD Master Asset
+            </span>
+            <span id="hero-rating-badge" class="brand-tag" style="background: rgba(0,0,0,0.6); color: #fff;">
+              ★ 4.9
+            </span>
+          </div>
+
+          <div class="media-overlay-bottom">
+            <div>
+              <div id="hero-overlay-title" style="font-weight: 700; font-size: 0.9rem;">Chronicles of the Astral Citadel
+              </div>
+              <div id="hero-overlay-format" style="font-size: 0.72rem; color: var(--text-secondary);">Blender (.blend) +
+                8K OpenEXR</div>
+            </div>
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--brand-cyan);">Click to Zoom ↗</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       Digital Art Catalogue (Categories, Filters, Search & Sort)
+       ====================================================================== -->
+  <main id="main-content" class="container">
+
+    <!-- Gallery Header & Filters -->
+    <section class="filter-section">
+
+      <!-- Section Title -->
+      <div
+        style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 class="font-heading" style="font-size: 2rem; font-weight: 800;">Curated Catalogue</h2>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Explore rare 3D renders, generative masterworks, and cyberpunk conceptual art.
+          </p>
+        </div>
+        <div id="active-filters-info" class="results-count-badge">
+          Showing <span id="display-results-count" style="font-weight: 800; color: var(--text-primary);">14</span>
+          Masterworks
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div id="category-pills-bar" class="category-pills">
+        <!-- Rendered by JS: All, 3D Renders, Abstract & Generative, Cyberpunk & Sci-Fi, Illustrations, Photography -->
+      </div>
+
+      <!-- Filter Controls Strip -->
+      <div class="filter-strip glass">
+
+        <!-- Live Catalogue Search -->
+        <div class="filter-group" style="flex: 1; max-width: 320px;">
+          <input type="text" id="catalogue-search-input" class="search-input"
+            placeholder="Filter by title or artist..." />
+        </div>
+
+        <!-- Price Range Slider -->
+        <div class="price-slider-box">
+          <label for="price-range-slider">Max Price:</label>
+          <input type="range" id="price-range-slider" min="150" max="600" step="10" value="600" />
+          <span id="price-slider-label" class="price-val">$600</span>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <div class="filter-group">
+          <label for="sort-dropdown"
+            style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Sort:</label>
+          <select id="sort-dropdown" class="sort-select">
+            <option value="featured">Featured Curations</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Highest Rated ★</option>
+          </select>
+        </div>
+
+        <!-- Reset Filters Button -->
+        <button id="reset-filters-btn" class="nav-btn" style="color: var(--brand-rose); display: none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+          </svg>
+          <span>Reset</span>
+        </button>
+
+      </div>
+
+    </section>
+
+    <!-- Artworks Grid -->
+    <div id="artworks-grid" class="gallery-grid">
+      <!-- Dynamically Injected Artworks Cards -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state-box" style="display: none; text-align: center; padding: 4rem 1rem;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">🎨</div>
+      <h3 class="font-heading" style="font-size: 1.5rem; font-weight: 700;">No Artworks Found</h3>
+      <p style="color: var(--text-muted); max-width: 420px; margin: 0.5rem auto 1.5rem;">
+        No masterworks matched your current search and filter settings. Try adjusting your price slider or search term.
+      </p>
+      <button id="empty-reset-btn" class="btn-primary">
+        Reset All Filters
+      </button>
+    </div>
+
+    <!-- ======================================================================
+         Admin Dashboard Panel (Full CRUD Control)
+         ====================================================================== -->
+    <section id="admin-section" class="admin-section" style="display: none;">
+
+      <div
+        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <div style="display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
+            <span class="admin-pill" style="font-size: 0.75rem; padding: 0.25rem 0.65rem;">Curator Suite</span>
+            <span style="font-size: 0.8rem; color: var(--brand-cyan); font-weight: 600;">Full CRUD Management</span>
+          </div>
+          <h2 class="font-heading" style="font-size: 2.2rem; font-weight: 800;">Admin Gallery Studio</h2>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">
+            Create, update, inspect, and remove curated masterworks from the live catalogue.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <button id="admin-reset-catalogue-btn" class="btn-secondary" title="Restore Default 14 Artworks">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            <span>Restore Master Collection</span>
+          </button>
+
+          <button id="admin-add-art-btn" class="btn-primary btn-cyan">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Add New Artwork</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Stats KPI Cards -->
+      <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+          <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+            Platform Volume</div>
+          <div id="stat-revenue" class="admin-stat-num">$14,820</div>
+          <div style="font-size: 0.75rem; color: var(--brand-emerald); font-weight: 600;">+24.6% vs previous cycle</div>
+        </div>
+
+        <div class="admin-stat-card">
+          <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Active
+            Artworks</div>
+          <div id="stat-active-artworks" class="admin-stat-num">14</div>
+          <div style="font-size: 0.75rem; color: var(--brand-cyan); font-weight: 600;">Live across 5 categories</div>
+        </div>
+
+        <div class="admin-stat-card">
+          <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Total
+            Orders Fulfilled</div>
+          <div id="stat-total-orders" class="admin-stat-num">28</div>
+          <div style="font-size: 0.75rem; color: var(--brand-violet); font-weight: 600;">100% digital instant delivery
+          </div>
+        </div>
+
+        <div class="admin-stat-card">
+          <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+            Collector Satisfaction</div>
+          <div id="stat-avg-rating" class="admin-stat-num">4.9 ★</div>
+          <div style="font-size: 0.75rem; color: var(--brand-gold); font-weight: 600;">Based on verified reviews</div>
+        </div>
+      </div>
+
+      <!-- Admin Management Table -->
+      <div class="admin-table-container">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Artwork Preview & Title</th>
+              <th>Artist</th>
+              <th>Category</th>
+              <th>Price (USD / ETH)</th>
+              <th>Rating</th>
+              <th>Spotlight Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-table-body">
+            <!-- Dynamically populated rows -->
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ======================================================================
+         Favorites Section
+         ====================================================================== -->
+    <section id="favorites-section" style="display: none; padding-bottom: 4rem;">
+      <div style="margin-bottom: 2rem;">
+        <h2 class="font-heading" style="font-size: 2rem; font-weight: 800;">Saved Favorites</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">
+          Your personal wishlist of curated artworks.
+        </p>
+      </div>
+
+      <div id="favorites-grid" class="gallery-grid">
+        <!-- Liked items -->
+      </div>
+
+      <div id="empty-favorites-box" style="display: none; text-align: center; padding: 4rem 1rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🤍</div>
+        <h3 class="font-heading" style="font-size: 1.5rem; font-weight: 700;">No Saved Favorites Yet</h3>
+        <p style="color: var(--text-muted); max-width: 420px; margin: 0.5rem auto 1.5rem;">
+          Tap the heart icon on any artwork card in the gallery to curate your personal collection.
+        </p>
+        <button id="fav-browse-btn" class="btn-primary">
+          Explore Gallery
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================
+       Slide-Over Shopping Cart Drawer
+       ====================================================================== -->
+  <div id="cart-overlay" class="cart-overlay">
+    <aside class="cart-drawer" id="cart-drawer">
+
+      <!-- Cart Header -->
+      <div class="cart-header">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Collector Bag</span>
+          <span id="cart-header-count" class="cat-count">0</span>
+        </h3>
+        <button id="cart-close-btn" class="cart-close-btn" aria-label="Close Cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Items Container -->
+      <div id="cart-items-list" class="cart-items-container">
+        <!-- Dynamically injected cart items -->
+      </div>
+
+      <!-- Empty Cart Message -->
+      <div id="cart-empty-view" style="display: none; text-align: center; padding: 4rem 1.5rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🛍️</div>
+        <h4 style="font-weight: 700; font-size: 1.2rem;">Your Bag is Empty</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.5rem 0 1.5rem;">
+          You haven't selected any curated digital masterworks yet.
+        </p>
+        <button id="cart-empty-explore-btn" class="btn-primary" style="width: 100%;">
+          Start Exploring
+        </button>
+      </div>
+
+      <!-- Cart Footer / Breakdown -->
+      <div id="cart-footer-box" class="cart-footer">
+
+        <!-- Promo Code Input -->
+        <div class="promo-row">
+          <input type="text" id="promo-code-input" class="promo-input" placeholder="Promo code (try 'NEO2026')" />
+          <button id="promo-apply-btn" class="btn-secondary" style="padding: 0.55rem 0.95rem; font-size: 0.78rem;">
+            Apply
+          </button>
+        </div>
+        <div id="promo-status-msg" style="font-size: 0.75rem; color: var(--brand-emerald); display: none;">
+          ✓ Code NEO2026 applied: 10% collector discount
+        </div>
+
+        <!-- Breakdown calculations -->
+        <div class="breakdown-row">
+          <span>Subtotal</span>
+          <span id="cart-subtotal-val">$0</span>
+        </div>
+
+        <div id="cart-discount-row" class="breakdown-row" style="display: none; color: var(--brand-emerald);">
+          <span>Promo Discount</span>
+          <span id="cart-discount-val">-$0</span>
+        </div>
+
+        <div class="breakdown-row">
+          <span>Platform & Provenance Fee (2.5%)</span>
+          <span id="cart-fee-val">$0</span>
+        </div>
+
+        <div class="breakdown-row total-row">
+          <span>Total Investment</span>
+          <span id="cart-total-val" style="color: var(--brand-cyan);">$0</span>
+        </div>
+
+        <button id="cart-checkout-btn" class="btn-primary checkout-btn">
+          <span>Proceed to Checkout</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- ======================================================================
+       Artwork Detail View & Reviews Modal
+       ====================================================================== -->
+  <div id="detail-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <button id="detail-modal-close" class="modal-close-corner" aria-label="Close">✕</button>
+
+      <div class="detail-modal-layout">
+
+        <!-- Artwork High-Res Display -->
+        <div class="detail-img-box">
+          <img id="modal-art-img" src="" alt="Artwork Preview" class="detail-img" />
+          <div
+            style="position: absolute; bottom: 1rem; left: 1rem; right: 1rem; display: flex; justify-content: space-between;">
+            <span id="modal-category-badge" class="cat-pill active" style="font-size: 0.7rem;">Category</span>
+            <span id="modal-rating-pill" class="brand-tag" style="background: rgba(0,0,0,0.7); color: #fff;">★
+              4.9</span>
+          </div>
+        </div>
+
+        <!-- Right Side: Specs, License & Cart Action -->
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span id="modal-edition-tag"
+              style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--brand-cyan);">
+              1 of 1 Masterpiece
+            </span>
+            <span id="modal-created-date" style="font-size: 0.72rem; color: var(--text-muted);">Created Oct 2026</span>
+          </div>
+
+          <h2 id="modal-art-title" class="font-heading"
+            style="font-size: 1.8rem; font-weight: 800; line-height: 1.2; margin-bottom: 0.85rem;">
+            Artwork Title
+          </h2>
+
+          <!-- Artist Card -->
+          <div class="artist-row" style="margin-bottom: 1.25rem;">
+            <img id="modal-artist-avatar" src="" alt="Artist Avatar" class="artist-avatar-lg"
+              style="width: 42px; height: 42px;" />
+            <div class="artist-meta">
+              <h4 id="modal-artist-name">Elena Rostova</h4>
+              <p id="modal-artist-handle">@elena_3d</p>
+            </div>
+            <div style="margin-left: auto;">
+              <span class="brand-tag" style="font-size: 0.65rem;">Verified Artist</span>
+            </div>
+          </div>
+
+          <p id="modal-artist-bio"
+            style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1rem; font-style: italic;">
+            Artist Bio statement
+          </p>
+
+          <p id="modal-art-desc"
+            style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
+            Narrative description of the artwork.
+          </p>
+
+          <!-- Technical Specs Grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 1.5rem;">
+            <div class="spec-chip">
+              <span>Resolution</span>
+              <strong id="modal-spec-res">7680 × 4320 (8K)</strong>
+            </div>
+            <div class="spec-chip">
+              <span>Format</span>
+              <strong id="modal-spec-format">Blender + OpenEXR</strong>
+            </div>
+            <div class="spec-chip">
+              <span>File Size</span>
+              <strong id="modal-spec-size">1.4 GB</strong>
+            </div>
+            <div class="spec-chip">
+              <span>Software Used</span>
+              <strong id="modal-spec-software">Blender 4.2 / Octane</strong>
+            </div>
+          </div>
+
+          <!-- License Selector Option -->
+          <div
+            style="margin-bottom: 1.5rem; background: var(--bg-surface-elevated); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.65rem;">
+              Select License Terms:
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+              <label style="flex: 1; display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="modal-license" value="personal" checked id="modal-lic-personal"
+                  style="margin-top: 0.2rem; accent-color: var(--brand-violet);" />
+                <div>
+                  <div style="font-size: 0.8rem; font-weight: 700;">Personal License</div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted);">Private digital displays, personal prints &
+                    portfolio.</div>
+                </div>
+              </label>
+
+              <label style="flex: 1; display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" name="modal-license" value="commercial" id="modal-lic-commercial"
+                  style="margin-top: 0.2rem; accent-color: var(--brand-violet);" />
+                <div>
+                  <div style="font-size: 0.8rem; font-weight: 700;">Commercial (2.2x)</div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted);">Commercial campaigns, broadcasting, UI &
+                    media production.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Pricing & Add to Cart -->
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+            <div>
+              <div style="font-size: 0.68rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+                Total Price</div>
+              <div style="font-size: 1.7rem; font-weight: 800; color: var(--text-primary);">
+                <span id="modal-calculated-price">$340</span>
+                <span id="modal-calculated-eth" class="price-eth">≈ 0.14 ETH</span>
+              </div>
+            </div>
+
+            <button id="modal-add-cart-btn" class="btn-primary" style="flex: 1;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span>Add to Cart</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Reviews & Ratings Section -->
+        <div class="reviews-section">
+
+          <div
+            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h3 class="font-heading" style="font-size: 1.35rem; font-weight: 800;">Collector Reviews & Ratings</h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted);">
+                Verified feedback from digital art collectors and exhibition curators.
+              </p>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 0.4rem;">
+              <span id="modal-avg-rating-val"
+                style="font-size: 1.6rem; font-weight: 800; color: var(--brand-gold);">4.9</span>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">/ 5.0 (<span id="modal-review-count">24</span>
+                verified)</span>
+            </div>
+          </div>
+
+          <!-- Interactive Review Submission Form -->
+          <div class="review-form-card">
+            <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem;">Leave a Collector Review</h4>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">
+              Share your assessment of file quality, textures, and aesthetic execution.
+            </p>
+
+            <form id="review-submit-form">
+              <label
+                style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 0.25rem;">
+                Select Rating (1 to 5 Stars):
+              </label>
+
+              <div id="star-rating-picker" class="star-rating-picker">
+                <button type="button" class="star-pick-btn active" data-rating="1">★</button>
+                <button type="button" class="star-pick-btn active" data-rating="2">★</button>
+                <button type="button" class="star-pick-btn active" data-rating="3">★</button>
+                <button type="button" class="star-pick-btn active" data-rating="4">★</button>
+                <button type="button" class="star-pick-btn active" data-rating="5">★</button>
+                <span id="star-rating-text"
+                  style="font-size: 0.85rem; font-weight: 700; margin-left: 0.5rem; align-self: center; color: var(--brand-gold);">
+                  5 Stars (Masterpiece)
+                </span>
+              </div>
+              <input type="hidden" id="selected-rating-val" value="5" />
+
+              <textarea id="review-comment-input" class="review-textarea"
+                placeholder="Write your constructive review (e.g., lighting fidelity, layer naming, resolution)..."
+                required></textarea>
+              <span id="review-error-msg" class="field-error-msg" style="display: none; margin-bottom: 0.75rem;">
+                Please enter a review comment before submitting.
+              </span>
+
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size: 0.75rem; color: var(--text-muted);">
+                  Posting as: <strong id="review-poster-name" style="color: var(--text-primary);">Alex Vance</strong>
+                </span>
+                <button type="submit" class="btn-primary" style="padding: 0.65rem 1.4rem; font-size: 0.82rem;">
+                  Submit Review
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Existing Reviews List -->
+          <div id="modal-reviews-list" class="reviews-list">
+            <!-- Dynamically populated reviews -->
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       Multi-Step Checkout Modal
+       ====================================================================== -->
+  <div id="checkout-modal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 680px;">
+      <button id="checkout-modal-close" class="modal-close-corner" aria-label="Close">✕</button>
+
+      <!-- Step Indicator Bar -->
+      <div class="checkout-steps-bar">
+        <div id="step-indicator-1" class="step-item active">
+          <span class="step-num">1</span>
+          <span>Billing Details</span>
+        </div>
+        <div style="width: 24px; height: 1px; background: var(--border-medium);"></div>
+        <div id="step-indicator-2" class="step-item">
+          <span class="step-num">2</span>
+          <span>Payment Method</span>
+        </div>
+        <div style="width: 24px; height: 1px; background: var(--border-medium);"></div>
+        <div id="step-indicator-3" class="step-item">
+          <span class="step-num">3</span>
+          <span>Digital Receipt</span>
+        </div>
+      </div>
+
+      <div class="checkout-body">
+
+        <!-- Step 1: Billing & Collector Details -->
+        <form id="checkout-step-1-form">
+          <h3 class="font-heading" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">
+            Collector & Billing Information
+          </h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            We will attach these details to your permanent cryptographic Certificate of Authenticity.
+          </p>
+
+          <div class="form-group">
+            <label for="checkout-name">Full Legal / Collector Name *</label>
+            <input type="text" id="checkout-name" class="form-input" placeholder="e.g. Alex Vance" required />
+            <span id="err-checkout-name" class="field-error-msg" style="display: none;">Name is required</span>
+          </div>
+
+          <div class="form-group">
+            <label for="checkout-email">Delivery & License Receipt Email *</label>
+            <input type="email" id="checkout-email" class="form-input" placeholder="e.g. alex@collector.io" required />
+            <span id="err-checkout-email" class="field-error-msg" style="display: none;">Valid email is required</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="checkout-country">Country of Residence *</label>
+              <select id="checkout-country" class="form-input" style="cursor: pointer;">
+                <option value="United States">United States</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Germany">Germany</option>
+                <option value="Japan">Japan</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Canada">Canada</option>
+                <option value="India">India</option>
+                <option value="Singapore">Singapore</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="checkout-wallet">Wallet / ENS Handle (Optional)</label>
+              <input type="text" id="checkout-wallet" class="form-input" placeholder="e.g. alex.eth or 0x71C..." />
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+            <div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Amount Due:</span>
+              <strong id="checkout-step1-total"
+                style="font-size: 1.25rem; color: var(--brand-cyan); margin-left: 0.35rem;">$0</strong>
+            </div>
+
+            <button type="submit" class="btn-primary">
+              <span>Continue to Payment</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </form>
+
+        <!-- Step 2: Payment Method Selector -->
+        <form id="checkout-step-2-form" style="display: none;">
+          <h3 class="font-heading" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">
+            Select Payment Method
+          </h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            Choose your preferred digital payment rails (Simulated Instant Sandbox).
+          </p>
+
+          <!-- Payment Tabs -->
+          <div class="payment-methods-grid">
+            <div class="payment-tab-btn active" data-method="card">
+              <div style="font-size: 1.4rem; margin-bottom: 0.25rem;">💳</div>
+              <div style="font-size: 0.8rem; font-weight: 700;">Credit / Debit</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);">Visa / Mastercard</div>
+            </div>
+
+            <div class="payment-tab-btn" data-method="upi">
+              <div style="font-size: 1.4rem; margin-bottom: 0.25rem;">⚡</div>
+              <div style="font-size: 0.8rem; font-weight: 700;">Instant UPI</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);">QR Code / UPI ID</div>
+            </div>
+
+            <div class="payment-tab-btn" data-method="crypto">
+              <div style="font-size: 1.4rem; margin-bottom: 0.25rem;">🦊</div>
+              <div style="font-size: 0.8rem; font-weight: 700;">Web3 Wallet</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);">MetaMask / Phantom</div>
+            </div>
+          </div>
+
+          <!-- Card Form View -->
+          <div id="payment-view-card">
+            <div class="form-group">
+              <label for="card-num">Card Number *</label>
+              <input type="text" id="card-num" class="form-input" placeholder="4242 •••• •••• 4242"
+                value="4242 8890 1234 5678" required />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label for="card-exp">Expiry (MM/YY) *</label>
+                <input type="text" id="card-exp" class="form-input" placeholder="12/28" value="10/28" required />
+              </div>
+              <div class="form-group">
+                <label for="card-cvc">CVC Security Code *</label>
+                <input type="text" id="card-cvc" class="form-input" placeholder="888" value="789" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- UPI Form View -->
+          <div id="payment-view-upi" style="display: none; text-align: center; padding: 1rem;">
+            <div
+              style="background: #fff; padding: 1rem; border-radius: 12px; display: inline-block; margin-bottom: 1rem;">
+              <!-- Simulated QR code -->
+              <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.8">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+                <line x1="14" y1="14" x2="14" y2="14.01"></line>
+                <line x1="17" y1="17" x2="17" y2="17.01"></line>
+                <line x1="20" y1="14" x2="20" y2="14.01"></line>
+                <line x1="20" y1="20" x2="20" y2="20.01"></line>
+              </svg>
+            </div>
+            <div class="form-group" style="max-width: 340px; margin: 0 auto;">
+              <label for="upi-id">Or enter UPI Virtual ID:</label>
+              <input type="text" id="upi-id" class="form-input" placeholder="collector@okhdfcbank"
+                value="alex@okaxis" />
+            </div>
+          </div>
+
+          <!-- Crypto Form View -->
+          <div id="payment-view-crypto"
+            style="display: none; text-align: center; padding: 1.5rem; background: var(--bg-surface-elevated); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 1.5rem;">
+            <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">🔗</div>
+            <div style="font-weight: 700; font-size: 0.95rem;">Web3 Provider Connected</div>
+            <div style="font-size: 0.75rem; font-family: monospace; color: var(--brand-cyan); margin: 0.25rem 0;">
+              0x892a...c481 (Ethereum Mainnet)
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              Gas Estimate: &lt; 0.001 ETH (~$2.40)
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+            <button type="button" id="checkout-back-step1" class="btn-secondary">
+              Back
+            </button>
+
+            <button type="submit" id="checkout-pay-btn" class="btn-primary"
+              style="background: linear-gradient(135deg, var(--brand-emerald), #059669);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>Complete Payment & Unlock Master Files</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Step 3: Digital Download Receipt & Confirmation Screen -->
+        <div id="checkout-step-3-confirmation" class="order-success-screen" style="display: none;">
+          <div class="success-icon-badge">✓</div>
+
+          <h3 class="font-heading" style="font-size: 1.8rem; font-weight: 800; margin-bottom: 0.35rem;">
+            Order Confirmed & Provenance Verified!
+          </h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); max-width: 480px; margin: 0 auto;">
+            Thank you for your acquisition. Your high-resolution master asset bundle and Certificate of Authenticity are
+            ready for instant download.
+          </p>
+
+          <div
+            style="margin: 1.25rem 0; font-family: monospace; font-size: 0.85rem; color: var(--brand-cyan); font-weight: 700;">
+            Receipt ID: <span id="receipt-order-id">#AETH-9821-X</span>
+          </div>
+
+          <!-- Digital Asset Vault Download Buttons -->
+          <div class="download-vault-list" id="receipt-download-list">
+            <!-- Dynamically populated download items -->
+          </div>
+
+          <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
+            <button id="receipt-print-btn" class="btn-secondary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span>Print Official Receipt</span>
+            </button>
+
+            <button id="receipt-done-btn" class="btn-primary">
+              Return to Gallery
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       Admin Add / Edit Artwork Modal (Full CRUD)
+       ====================================================================== -->
+  <div id="admin-art-modal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 640px;">
+      <button id="admin-art-modal-close" class="modal-close-corner" aria-label="Close">✕</button>
+
+      <div style="padding: 2rem;">
+        <h3 id="admin-modal-title" class="font-heading"
+          style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.35rem;">
+          Add New Digital Artwork
+        </h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Publish a new digital masterwork to the live curated catalogue.
+        </p>
+
+        <form id="admin-artwork-form">
+          <input type="hidden" id="admin-form-art-id" value="" />
+
+          <div class="form-group">
+            <label for="admin-art-title">Artwork Title *</label>
+            <input type="text" id="admin-art-title" class="form-input" placeholder="e.g. Solaris Resonance" required />
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="admin-artist-name">Artist Name *</label>
+              <input type="text" id="admin-artist-name" class="form-input" placeholder="e.g. Elena Rostova" required />
+            </div>
+
+            <div class="form-group">
+              <label for="admin-artist-handle">Artist Handle *</label>
+              <input type="text" id="admin-artist-handle" class="form-input" placeholder="e.g. @elena_3d" required />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="admin-art-category">Category *</label>
+              <select id="admin-art-category" class="form-input" style="cursor: pointer;">
+                <option value="3D Renders">3D Renders</option>
+                <option value="Abstract & Generative">Abstract & Generative</option>
+                <option value="Cyberpunk & Sci-Fi">Cyberpunk & Sci-Fi</option>
+                <option value="Illustrations">Illustrations</option>
+                <option value="Photography">Photography</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="admin-art-price">Price in USD ($) *</label>
+              <input type="number" id="admin-art-price" class="form-input" min="50" max="5000" placeholder="350"
+                required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-art-image">Image URL (High-Res 3D / Render Placeholder) *</label>
+            <input type="url" id="admin-art-image" class="form-input" placeholder="https://images.unsplash.com/..."
+              required />
+            <div id="admin-img-preview-box" style="margin-top: 0.5rem; display: none;">
+              <img id="admin-img-preview" src="" alt="Live Preview"
+                style="width: 100%; height: 160px; object-fit: cover; border-radius: var(--radius-md);" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label for="admin-art-resolution">Resolution</label>
+              <input type="text" id="admin-art-resolution" class="form-input" placeholder="7680 × 4320 (8K)"
+                value="7680 × 4320 (8K)" />
+            </div>
+
+            <div class="form-group">
+              <label for="admin-art-format">File Formats</label>
+              <input type="text" id="admin-art-format" class="form-input" placeholder="Blender (.blend) + 8K OpenEXR"
+                value="Blender 4.2 + 8K TIFF" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="admin-art-desc">Artwork Description</label>
+            <textarea id="admin-art-desc" class="review-textarea"
+              placeholder="Conceptual narrative, lighting description, and software tools..."></textarea>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+            <input type="checkbox" id="admin-art-featured"
+              style="accent-color: var(--brand-violet); width: 16px; height: 16px;" />
+            <label for="admin-art-featured" style="font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+              Set as Spotlight Drop Hero banner
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+            <button type="button" id="admin-cancel-btn" class="btn-secondary">
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary">
+              <span id="admin-submit-btn-text">Save Artwork to Catalogue</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       Delete Confirmation Dialog Modal
+       ====================================================================== -->
+  <div id="delete-confirm-modal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 440px; text-align: center; padding: 2rem;">
+      <div style="font-size: 2.8rem; margin-bottom: 1rem;">⚠️</div>
+      <h3 class="font-heading" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;">
+        Remove Artwork?
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        Are you sure you want to permanently delete <strong id="delete-target-title"
+          style="color: var(--text-primary);">this artwork</strong> from the catalogue?
+      </p>
+
+      <div style="display: flex; justify-content: center; gap: 0.75rem;">
+        <button id="delete-cancel-btn" class="btn-secondary">
+          Cancel
+        </button>
+        <button id="delete-confirm-btn" class="btn-primary btn-danger">
+          Yes, Delete Artwork
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       User Registration & Sign In Modal (with Validation & Demo Logins)
+       ====================================================================== -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 480px;">
+      <button id="auth-modal-close" class="modal-close-corner" aria-label="Close">✕</button>
+
+      <div style="padding: 2rem;">
+
+        <!-- Toggle Tabs: Sign In vs Sign Up -->
+        <div class="auth-tabs">
+          <button type="button" id="auth-tab-signin" class="auth-tab-btn active">Sign In</button>
+          <button type="button" id="auth-tab-signup" class="auth-tab-btn">Create Account</button>
+        </div>
+
+        <!-- Sign In Form -->
+        <form id="signin-form">
+          <div class="form-group">
+            <label for="signin-email">Collector Email *</label>
+            <input type="email" id="signin-email" class="form-input" placeholder="alex@collector.io" required />
+            <span id="err-signin-email" class="field-error-msg" style="display: none;">Valid email required</span>
+          </div>
+
+          <div class="form-group">
+            <label for="signin-password">Password *</label>
+            <input type="password" id="signin-password" class="form-input" placeholder="••••••••" required />
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.5rem;">
+            Sign In to Aetheria
+          </button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signup-form" style="display: none;">
+          <div class="form-group">
+            <label for="signup-name">Full Name *</label>
+            <input type="text" id="signup-name" class="form-input" placeholder="e.g. Jordan Cruz" required />
+            <span id="err-signup-name" class="field-error-msg" style="display: none;">Name is required</span>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email Address *</label>
+            <input type="email" id="signup-email" class="form-input" placeholder="jordan@collector.io" required />
+            <span id="err-signup-email" class="field-error-msg" style="display: none;">Enter a valid email
+              address</span>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-role">Account Type</label>
+            <select id="signup-role" class="form-input" style="cursor: pointer;">
+              <option value="collector">Digital Art Collector / Buyer</option>
+              <option value="admin">Curator / Gallery Admin</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Create Password (min 6 characters) *</label>
+            <input type="password" id="signup-password" class="form-input" placeholder="••••••••" required />
+            <div id="password-strength-indicator"
+              style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">
+              Password strength: <span id="pwd-strength-label" style="font-weight: 700;">None</span>
+            </div>
+            <span id="err-signup-password" class="field-error-msg" style="display: none;">Password must be at least 6
+              characters</span>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-confirm-password">Confirm Password *</label>
+            <input type="password" id="signup-confirm-password" class="form-input" placeholder="••••••••" required />
+            <span id="err-signup-confirm" class="field-error-msg" style="display: none;">Passwords must match</span>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.5rem;">
+            Create Collector Profile
+          </button>
+        </form>
+
+        <!-- Instant 1-Click Demo Logins -->
+        <div class="demo-login-box">
+          <div style="font-size: 0.75rem; text-align: center; color: var(--text-muted); font-weight: 600;">
+            Or instant test login with demo credentials:
+          </div>
+
+          <div class="demo-login-buttons">
+            <button type="button" id="demo-login-collector-btn" class="btn-secondary"
+              style="font-size: 0.75rem; padding: 0.6rem;">
+              👤 1-Click Collector
+            </button>
+            <button type="button" id="demo-login-admin-btn" class="btn-secondary admin-btn"
+              style="font-size: 0.75rem; padding: 0.6rem;">
+              🛡️ 1-Click Curator
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       Order History & Download Vault Modal
+       ====================================================================== -->
+  <div id="orders-modal" class="modal-overlay">
+    <div class="modal-dialog" style="max-width: 720px;">
+      <button id="orders-modal-close" class="modal-close-corner" aria-label="Close">✕</button>
+
+      <div style="padding: 2rem;">
+        <h3 class="font-heading" style="font-size: 1.6rem; font-weight: 800; margin-bottom: 0.35rem;">
+          Order History & Digital Vault
+        </h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Permanent access to your purchased master files, RAW packages, and certificates.
+        </p>
+
+        <div id="orders-list-container" style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <!-- Dynamically populated past receipts -->
+        </div>
+
+        <div id="orders-empty-state" style="display: none; text-align: center; padding: 3rem 1rem;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🧾</div>
+          <div style="font-weight: 700; font-size: 1.1rem;">No Orders Yet</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem;">
+            Completed purchases and download links will be safely stored in this vault.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       Toast Notifications Container
+       ====================================================================== -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ======================================================================
+       Footer
+       ====================================================================== -->
+  <footer class="footer">
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div>
+          <div class="brand-logo" style="margin-bottom: 1rem;">
+            <div class="brand-icon" style="width: 36px; height: 36px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              </svg>
+            </div>
+            <span class="font-heading" style="font-size: 1.3rem; font-weight: 800;">AETHERIA</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; max-width: 320px;">
+            A premier digital art gallery and creative exchange connecting world-class 3D sculptors, generative artists,
+            and visionaries with global collectors.
+          </p>
+          <div style="margin-top: 1rem; font-size: 0.75rem; color: var(--brand-cyan); font-weight: 600;">
+            ● Live on Ethereum & Decentralized Storage
+          </div>
+        </div>
+
+        <div>
+          <h4
+            style="font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Curated Categories</h4>
+          <ul
+            style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.82rem; color: var(--text-secondary);">
+            <li><a role="button" class="footer-cat-link" data-cat="3D Renders" style="cursor: pointer;">3D Renders</a>
+            </li>
+            <li><a role="button" class="footer-cat-link" data-cat="Abstract & Generative"
+                style="cursor: pointer;">Abstract & Generative</a></li>
+            <li><a role="button" class="footer-cat-link" data-cat="Cyberpunk & Sci-Fi"
+                style="cursor: pointer;">Cyberpunk & Sci-Fi</a></li>
+            <li><a role="button" class="footer-cat-link" data-cat="Illustrations" style="cursor: pointer;">Vector
+                Illustrations</a></li>
+            <li><a role="button" class="footer-cat-link" data-cat="Photography" style="cursor: pointer;">Fine Art
+                Photography</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4
+            style="font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Curator Tools</h4>
+          <ul
+            style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.82rem; color: var(--text-secondary);">
+            <li><a role="button" id="footer-admin-link" style="cursor: pointer; color: var(--brand-cyan);">Admin CRUD
+                Studio</a></li>
+            <li><a role="button" id="footer-orders-link" style="cursor: pointer;">Collector Receipts Vault</a></li>
+            <li><a role="button" id="footer-login-link" style="cursor: pointer;">Collector Sign In</a></li>
+            <li><a role="button" id="footer-reset-link" style="cursor: pointer;">Restore Master Artworks</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4
+            style="font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+            Drop Dispatch</h4>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+            Get notified when rare 1-of-1 masterworks and genesis collections drop.
+          </p>
+          <div style="display: flex; gap: 0.4rem;">
+            <input type="email" id="newsletter-email" class="promo-input" placeholder="collector@art.io" />
+            <button id="newsletter-submit-btn" class="btn-primary"
+              style="padding: 0.55rem 0.85rem; font-size: 0.75rem;">
+              Join
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div
+        style="border-top: 1px solid var(--border-subtle); padding-top: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.75rem; color: var(--text-muted);">
+        <div>
+          © 2026 AETHERIA Gallery Inc. Crafted with pure HTML, CSS, and Vanilla JavaScript. All rights reserved.
+        </div>
+        <div style="display: flex; gap: 1.5rem;">
+          <span>Privacy & Provenance Policy</span>
+          <span>Terms of License</span>
+          <span>Security Status: 100% Operational</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Application Logic Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
