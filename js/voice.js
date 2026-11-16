@@ -75,74 +75,81 @@ function vaSay(msg) {
 
 // Speak a reply: soft voice, sentence by sentence.
 // Utterances are kept in an array so Chrome cannot garbage-collect them before they play.
+// A watchdog checks that speech really starts; if a voice hangs (some Mac voices do in Chrome),
+// it is skipped and the next voice is tried, ending with the browser's default voice.
 const vaUtterances = [];
+const vaBadVoices = new Set();
+let vaSpeakId = 0;
+
 function vaSpeak(msg, onDone) {
   const synth = window.speechSynthesis;
   const text = msg.replace(/₹/g, "rupees ").replace(/[🎤🔊]/gu, "").trim();
   if (!text) { if (onDone) onDone(); return; }
-  const parts = text.match(/[^.!?।]+[.!?।]*/g) || [text];
+  const parts = (text.match(/[^.!?।]+[.!?।]*/g) || [text]).map((p) => p.trim()).filter(Boolean);
+  const id = ++vaSpeakId;
   let finished = false;
   const done = () => { if (!finished) { finished = true; if (onDone) onDone(); } };
-  if (onDone) setTimeout(done, 4000);   // safety net if the browser never reports the end
-  const voice = vaSoftVoice();
+  if (onDone) setTimeout(done, 5000);   // safety net if the browser never reports the end
 
-  const make = (part, useVoice) => {
-    const u = new SpeechSynthesisUtterance(part);
-    u.lang = VA_LOCALE[lang];
-    if (useVoice && voice) u.voice = voice;
-    u.volume = 0.7;   // soft (0–1)
-    u.rate = 1.0;     // normal speed
-    u.pitch = 1.05;   // gentle tone
-    u.onstart = () => { $("#vaStatus").textContent = "🔊"; };
-    u.onend = () => {
-      if (u === vaUtterances[vaUtterances.length - 1]) done();
-      if (!synth.speaking) $("#vaStatus").textContent = "";
-    };
-    u.onerror = (e) => {
-      // If the chosen voice fails, try again with the browser's default voice
-      if (useVoice && voice && e.error !== "interrupted" && e.error !== "canceled") {
-        const retry = make(part, false);
-        vaUtterances.push(retry);
-        synth.speak(retry);
+  const attempt = (voice) => {
+    if (id !== vaSpeakId) return;        // a newer reply took over
+    let started = false, failed = false;
+    const fail = () => {
+      if (started || failed || id !== vaSpeakId) return;
+      failed = true;
+      clearTimeout(watch);
+      synth.cancel();
+      if (voice) {
+        vaBadVoices.add(voice.voiceURI);
+        setTimeout(() => attempt(vaSoftVoice()), 60);   // next best voice, or default (null)
+      } else {
+        $("#vaStatus").textContent = "";
+        done();
       }
     };
-    return u;
-  };
-
-  const go = () => {
     vaUtterances.length = 0;
-    parts.forEach((part) => {
-      if (!part.trim()) return;
-      const u = make(part.trim(), true);
+    parts.forEach((part, i) => {
+      const u = new SpeechSynthesisUtterance(part);
+      u.lang = VA_LOCALE[lang];
+      if (voice) u.voice = voice;
+      u.volume = 0.7;   // soft (0–1)
+      u.rate = 1.0;     // normal speed
+      u.pitch = 1.05;   // gentle tone
+      u.onstart = () => { started = true; clearTimeout(watch); $("#vaStatus").textContent = "🔊"; };
+      u.onend = () => {
+        if (i === parts.length - 1) { $("#vaStatus").textContent = ""; done(); }
+      };
+      u.onerror = (e) => { if (e.error !== "interrupted" && e.error !== "canceled") fail(); };
       vaUtterances.push(u);
       synth.speak(u);
     });
     synth.resume();   // wake the engine if Chrome left it paused
+    const watch = setTimeout(fail, 1500);
   };
 
-  if (synth.speaking || synth.pending) { synth.cancel(); setTimeout(go, 50); }
-  else go();
+  if (synth.speaking || synth.pending) { synth.cancel(); setTimeout(() => attempt(vaSoftVoice()), 60); }
+  else attempt(vaSoftVoice());
 }
 
-// Pick a soft-sounding voice for the current language when the device has one
+// Pick a soft-sounding voice for the current language.
+// Chrome's Google voices are preferred because they reliably play in Chrome.
 const VA_SOFT_VOICES = ["female", "samantha", "karen", "moira", "tessa", "veena", "lekha", "heera", "kalpana",
-  "swara", "shruti", "neerja", "aditi", "raveena", "google हिन्दी", "google తెలుగు", "zira", "aria", "jenny"];
-const vaVoiceCache = {};
-if (window.speechSynthesis) speechSynthesis.addEventListener("voiceschanged", () => { for (const k in vaVoiceCache) delete vaVoiceCache[k]; });
+  "swara", "shruti", "neerja", "aditi", "raveena", "zira", "aria", "jenny"];
 function vaSoftVoice() {
-  if (vaVoiceCache[lang]) return vaVoiceCache[lang];
-  const voices = speechSynthesis.getVoices().filter((x) => x.lang && x.lang.replace("_", "-").toLowerCase().startsWith(lang));
+  if (!window.speechSynthesis) return null;
+  const voices = speechSynthesis.getVoices().filter((x) =>
+    x.lang && x.lang.replace("_", "-").toLowerCase().startsWith(lang) && !vaBadVoices.has(x.voiceURI));
   if (!voices.length) return null;
   const locale = VA_LOCALE[lang].toLowerCase();
   const score = (x) => {
     const name = x.name.toLowerCase();
     let sc = 0;
-    if (VA_SOFT_VOICES.some((w) => name.includes(w))) sc += 2;
+    if (name.includes("google")) sc += 4;                               // reliable in Chrome
+    if (VA_SOFT_VOICES.some((w) => name.includes(w))) sc += 2;         // soft-sounding
     if (x.lang.replace("_", "-").toLowerCase() === locale) sc += 1;   // Indian accent first
-    if (x.localService) sc += 4;                                      // on-device voice = no network lag
     return sc;
   };
-  return (vaVoiceCache[lang] = voices.slice().sort((a, b) => score(b) - score(a))[0]);
+  return voices.slice().sort((a, b) => score(b) - score(a))[0];
 }
 
 function vaLog(msg, who) {
@@ -349,7 +356,7 @@ function vaStartListening() {
     $("#vaInput").value = text;
     if (r.isFinal) return finish(text);
     clearTimeout(quietTimer);
-    quietTimer = setTimeout(() => finish(text), 800);   // user paused → respond right away
+    quietTimer = setTimeout(() => finish(text), 600);   // user paused → respond right away
   };
   vaRec.onerror = (e) => {
     if (done || e.error === "aborted") return;

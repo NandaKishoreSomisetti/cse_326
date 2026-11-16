@@ -393,9 +393,9 @@ function playSplash(message, onSwitch) {
   sp.classList.remove("hidden", "leaving");
   void sp.offsetWidth;                          // restart CSS animations
   sp.classList.add("playing");
-  setTimeout(onSwitch, 1100);                   // switch page behind the splash
-  setTimeout(() => sp.classList.add("leaving"), 1500);
-  setTimeout(() => sp.classList.add("hidden"), 2000);
+  setTimeout(onSwitch, 650);                    // switch page behind the splash
+  setTimeout(() => sp.classList.add("leaving"), 950);
+  setTimeout(() => sp.classList.add("hidden"), 1300);
 }
 
 function setupAuth() {

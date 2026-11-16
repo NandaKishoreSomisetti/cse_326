@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ArtMart — Digital Art Marketplace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='3' y='3' width='42' height='42' rx='3' fill='%23fff' stroke='%23C86D51' stroke-width='4'/%3E%3Cpath d='M12 35 L21 21 L27 29 L31 24 L36 35 Z' fill='%231A1A1A'/%3E%3Ccircle cx='30' cy='16' r='3.2' fill='%23C86D51'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="css/style.css?v=14">
+  <link rel="stylesheet" href="css/style.css?v=17">
 </head>
 <body>
 
@@ -60,6 +62,17 @@
 
     <!-- AUTH VIEW (shown first) -->
     <section id="view-auth" class="view hidden">
+      <!-- decorative background -->
+      <div class="auth-bg" aria-hidden="true">
+        <span class="shape s1"></span>
+        <span class="shape s2"></span>
+        <span class="shape s3"></span>
+        <span class="shape s4"></span>
+        <span class="shape s5"></span>
+        <span class="shape s6"></span>
+        <svg class="shape s7" viewBox="0 0 200 60"><path d="M5 40 C 40 5, 70 55, 105 25 S 165 10, 195 35" /></svg>
+        <svg class="shape s8" viewBox="0 0 200 60"><path d="M5 30 C 45 55, 80 5, 115 30 S 170 50, 195 20" /></svg>
+      </div>
       <div class="welcome">
         <h1><span data-i18n="welcome">Welcome to</span> <span>ArtMart</span></h1>
         <p data-i18n="welcomeSub">Discover, collect and own original digital art.</p>
@@ -229,10 +242,10 @@
 
   <div class="toast hidden" id="toast"></div>
 
-  <script src="js/data.js?v=14"></script>
-  <script src="js/i18n.js?v=14"></script>
-  <script src="js/art-i18n.js?v=14"></script>
-  <script src="js/app.js?v=14"></script>
-  <script src="js/voice.js?v=14"></script>
+  <script src="js/data.js?v=17"></script>
+  <script src="js/i18n.js?v=17"></script>
+  <script src="js/art-i18n.js?v=17"></script>
+  <script src="js/app.js?v=17"></script>
+  <script src="js/voice.js?v=17"></script>
 </body>
 </html>
