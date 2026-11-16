@@ -70,26 +70,58 @@ function vaStrip(text, key) {
 function vaSay(msg) {
   vaLog(msg, "bot");
   if (vaMuted || !window.speechSynthesis) return;
-  try {
-    speechSynthesis.cancel();
-    const text = msg.replace(/₹/g, "rupees ").replace(/[🎤🔊]/gu, "");
-    const parts = text.match(/[^.!?।:]+[.!?।:]*/g) || [text];
-    const v = vaSoftVoice();
-    clearTimeout(vaSay.timer);
-    vaSay.timer = setTimeout(() => {
-      parts.forEach((part) => {
-        if (!part.trim()) return;
-        const u = new SpeechSynthesisUtterance(part.trim());
-        u.lang = VA_LOCALE[lang];
-        if (v) u.voice = v;
-        // Soft, calm delivery
-        u.volume = 0.7;   // quieter (0–1)
-        u.rate = 1.0;     // normal speed (no drag)
-        u.pitch = 1.05;   // slightly gentle tone
-        speechSynthesis.speak(u);
-      });
-    }, 60);
-  } catch (e) {}
+  try { vaSpeak(msg); } catch (e) {}
+}
+
+// Speak a reply: soft voice, sentence by sentence.
+// Utterances are kept in an array so Chrome cannot garbage-collect them before they play.
+const vaUtterances = [];
+function vaSpeak(msg, onDone) {
+  const synth = window.speechSynthesis;
+  const text = msg.replace(/₹/g, "rupees ").replace(/[🎤🔊]/gu, "").trim();
+  if (!text) { if (onDone) onDone(); return; }
+  const parts = text.match(/[^.!?।]+[.!?।]*/g) || [text];
+  let finished = false;
+  const done = () => { if (!finished) { finished = true; if (onDone) onDone(); } };
+  if (onDone) setTimeout(done, 4000);   // safety net if the browser never reports the end
+  const voice = vaSoftVoice();
+
+  const make = (part, useVoice) => {
+    const u = new SpeechSynthesisUtterance(part);
+    u.lang = VA_LOCALE[lang];
+    if (useVoice && voice) u.voice = voice;
+    u.volume = 0.7;   // soft (0–1)
+    u.rate = 1.0;     // normal speed
+    u.pitch = 1.05;   // gentle tone
+    u.onstart = () => { $("#vaStatus").textContent = "🔊"; };
+    u.onend = () => {
+      if (u === vaUtterances[vaUtterances.length - 1]) done();
+      if (!synth.speaking) $("#vaStatus").textContent = "";
+    };
+    u.onerror = (e) => {
+      // If the chosen voice fails, try again with the browser's default voice
+      if (useVoice && voice && e.error !== "interrupted" && e.error !== "canceled") {
+        const retry = make(part, false);
+        vaUtterances.push(retry);
+        synth.speak(retry);
+      }
+    };
+    return u;
+  };
+
+  const go = () => {
+    vaUtterances.length = 0;
+    parts.forEach((part) => {
+      if (!part.trim()) return;
+      const u = make(part.trim(), true);
+      vaUtterances.push(u);
+      synth.speak(u);
+    });
+    synth.resume();   // wake the engine if Chrome left it paused
+  };
+
+  if (synth.speaking || synth.pending) { synth.cancel(); setTimeout(go, 50); }
+  else go();
 }
 
 // Pick a soft-sounding voice for the current language when the device has one
@@ -342,7 +374,7 @@ function vaRenderChips() {
 function vaWarmUp() {
   if (vaWarmUp.done || !window.speechSynthesis) return;
   vaWarmUp.done = true;
-  try { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); vaSoftVoice(); } catch (e) {}
+  try { speechSynthesis.getVoices(); speechSynthesis.resume(); vaSoftVoice(); } catch (e) {}
 }
 
 function vaClosePanel() {
@@ -351,6 +383,15 @@ function vaClosePanel() {
   p.classList.add("closing");
   setTimeout(() => { p.classList.add("hidden"); p.classList.remove("closing"); }, 200);
   if (vaListening) vaRec.abort();
+}
+
+let vaGreeted = false;
+function vaGreetThenListen() {
+  if (vaGreeted || vaMuted || !window.speechSynthesis) { vaStartListening(); return; }
+  vaGreeted = true;
+  vaLog(t("vaGreet"), "bot");
+  try { vaSpeak(t("vaGreet"), () => vaStartListening()); }
+  catch (e) { vaStartListening(); }
 }
 
 function vaOpen() {
@@ -363,7 +404,7 @@ function vaSetup() {
   vaRenderChips();
   $("#vaMute").textContent = vaMuted ? "🔇" : "🔊";
   $("#vaBtn").addEventListener("click", () => {
-    if ($("#vaPanel").classList.contains("hidden")) { vaOpen(); vaStartListening(); }
+    if ($("#vaPanel").classList.contains("hidden")) { vaOpen(); vaGreetThenListen(); }
     else vaClosePanel();
   });
   $("#vaClose").addEventListener("click", vaClosePanel);
