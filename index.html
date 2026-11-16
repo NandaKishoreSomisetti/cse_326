@@ -1,789 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AETHERIA — Digital Art Marketplace & Gallery</title>
-  <meta name="description" content="A curated digital art gallery and creative platform built with clean, simple HTML, CSS, and JavaScript." />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e3a8a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 2 7 12 12 22 7 12 2'></polygon><polyline points='2 17 12 22 22 17'></polyline><polyline points='2 12 12 17 22 12'></polyline></svg>" />
-
-  <!-- Google Fonts: Space Grotesk & Inter -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArtMart — Digital Art Marketplace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Classic Stylesheet -->
-  <link rel="stylesheet" href="css/style.css" />
-
-  <!-- Confetti Celebration Library -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- ======================================================================
-       Classic Navigation Header
-       ====================================================================== -->
+  <!-- NAVBAR -->
   <header class="navbar">
     <div class="container nav-inner">
-      
-      <!-- Logo -->
-      <div class="brand" id="nav-brand-btn" role="button">
-        <div class="brand-icon">✦</div>
-        <div>
-          <div class="brand-name">AETHERIA</div>
-          <div class="brand-tagline">Curated Digital Gallery</div>
-        </div>
-      </div>
-
-      <!-- Navigation Tabs -->
+      <a href="#" class="logo" data-view="shop">Art<span>Mart</span></a>
+      <input type="search" id="search" class="search" data-i18n-ph="search" placeholder="Search art or artist...">
       <nav class="nav-links">
-        <button id="tab-gallery-btn" class="nav-link active">Gallery</button>
-        <button id="tab-hero-btn" class="nav-link">Spotlight Drop</button>
-        <button id="tab-admin-btn" class="nav-link">Admin Studio</button>
-        <button id="tab-orders-btn" class="nav-link">My Orders</button>
-        <button id="tab-auth-btn" class="nav-link">Login / Account</button>
+        <button class="link" data-view="shop" data-i18n="shop">Shop</button>
+        <button class="link admin-only hidden" data-view="admin" data-i18n="admin">Admin</button>
+        <select id="langSel" class="lang-select" title="Language"></select>
+        <button class="link" id="themeBtn" title="Toggle theme">☀️</button>
+        <button class="link" id="cartBtn"><span data-i18n="cart">Cart</span> <span class="badge" id="cartCount">0</span></button>
+        <button class="btn btn-small" id="authBtn">Login</button>
       </nav>
-
-      <!-- Right Controls -->
-      <div class="nav-right">
-        <!-- Theme Switch -->
-        <button id="theme-btn" class="btn btn-secondary btn-sm" title="Toggle Light / Dark Mode" style="padding: 0.45rem 0.65rem;">
-          <span id="theme-icon">🌙</span>
-        </button>
-
-        <!-- Cart Button -->
-        <button id="cart-open-btn" class="cart-btn">
-          <span>Bag</span>
-          <span id="cart-count-badge" class="cart-count-pill">0</span>
-        </button>
-
-        <!-- User Status Chip -->
-        <div id="user-status-chip" class="badge" style="cursor: pointer;">
-          <span id="user-display-name">Alex Vance</span>
-        </div>
-      </div>
-
     </div>
   </header>
 
-  <!-- ======================================================================
-       VIEW 1: GALLERY & SPOTLIGHT DROP
-       ====================================================================== -->
-  <div id="view-gallery">
-    
-    <!-- Hero Banner: Spotlight Drop -->
-    <section class="hero" id="spotlight-hero-anchor">
-      <div class="container">
-        
-        <div class="hero-card">
-          <!-- Left Details -->
-          <div>
-            <div class="hero-badge-row">
-              <span class="badge" style="background-color: var(--primary); color: #fff;">
-                Spotlight Drop #01
-              </span>
-              <span class="countdown-pill">
-                Drop Closes In: <strong id="hero-timer">14h : 28m : 45s</strong>
-              </span>
-            </div>
+  <main class="container">
 
-            <h1 class="hero-title heading" id="hero-title">Chronicles of the Astral Citadel</h1>
-            <p class="hero-desc" id="hero-desc">
-              A monumental speculative architecture floating within an interstellar nebula. Crafted with high-density procedural geometry, physical volumetric cloud simulations, and photorealistic raytraced sub-surface scattering.
-            </p>
+    <!-- SHOP VIEW -->
+    <section id="view-shop" class="view">
+      <div class="hero" id="hero"></div>
 
-            <div class="hero-artist">
-              <img id="hero-artist-avatar" src="" alt="Artist" class="hero-artist-img" />
-              <div>
-                <h4 id="hero-artist-name" style="font-size: 0.95rem; font-weight: 700;">Elena Rostova</h4>
-                <p style="font-size: 0.78rem; color: var(--text-muted);"><span id="hero-artist-handle">@elena_3d</span> • <span id="hero-category-label" style="color: var(--primary); font-weight: 600;">3D Art</span></p>
-              </div>
-              <div style="margin-left: auto; text-align: right;">
-                <span class="badge" id="hero-edition-badge">1 of 1 Masterpiece</span>
-              </div>
-            </div>
-
-            <!-- Specs Grid -->
-            <div class="hero-specs-row">
-              <div class="spec-box">
-                <span>Resolution</span>
-                <strong id="hero-res">7680 × 4320 (8K)</strong>
-              </div>
-              <div class="spec-box">
-                <span>Format</span>
-                <strong id="hero-fmt">Blender + 8K OpenEXR</strong>
-              </div>
-              <div class="spec-box">
-                <span>Software</span>
-                <strong id="hero-soft">Blender 4.2 / Octane</strong>
-              </div>
-            </div>
-
-            <!-- Price & Action -->
-            <div class="hero-actions">
-              <div class="hero-price">
-                <span>Reserve Price</span>
-                <strong id="hero-price-val">$340</strong>
-                <span id="hero-eth-val" style="color: var(--text-muted); font-size: 0.75rem;">≈ 0.14 ETH</span>
-              </div>
-
-              <button id="hero-add-bag-btn" class="btn btn-primary" style="flex: 1; padding: 0.85rem 1.5rem;">
-                Add to Bag
-              </button>
-
-              <button id="hero-inspect-modal-btn" class="btn btn-secondary" style="padding: 0.85rem 1.25rem;">
-                Inspect Specs
-              </button>
-            </div>
-          </div>
-
-          <!-- Right Image Media -->
-          <div class="hero-media" id="hero-media-preview">
-            <img id="hero-image" src="" alt="Hero Artwork" class="hero-img" />
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Catalogue & Filtering Section -->
-    <section class="catalogue-section">
-      <div class="container">
-        
-        <div class="section-head">
-          <div>
-            <h2 class="heading" style="font-size: 1.85rem;">Curated Artworks Catalogue</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">
-              Filter, search, and collect authenticated digital creations.
-            </p>
-          </div>
-          <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">
-            Showing <span id="artworks-count-num" style="color: var(--primary); font-weight: 700;">14</span> Artworks
-          </div>
-        </div>
-
-        <!-- Category Pills -->
-        <div class="categories-bar" id="category-pills">
-          <!-- Rendered dynamically -->
-        </div>
-
-        <!-- Filter Controls Strip -->
-        <div class="filter-strip">
-          <!-- Search box -->
-          <div class="search-field">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="catalogue-search-box" class="search-input" placeholder="Search by title, artist, or style..." />
-          </div>
-
-          <!-- Price Slider -->
-          <div class="slider-group">
-            <label for="price-filter-slider">Max Price:</label>
-            <input type="range" id="price-filter-slider" min="150" max="600" step="10" value="600" />
-            <strong id="price-slider-display" style="color: var(--primary); font-family: monospace;">$600</strong>
-          </div>
-
-          <!-- Sort dropdown -->
-          <div>
-            <select id="catalogue-sort-select" class="sort-select">
-              <option value="featured">Featured Curations</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="rating">Highest Rated ★</option>
-            </select>
-          </div>
-
-          <!-- Reset Filter Button -->
-          <button id="catalogue-reset-filters-btn" class="btn btn-secondary btn-sm" style="display: none;">
-            Reset Filters
-          </button>
-        </div>
-
-        <!-- Artworks Gallery Grid -->
-        <div id="artworks-catalogue-grid" class="gallery-grid">
-          <!-- Cards populated by JS -->
-        </div>
-
-        <!-- Empty Results Message -->
-        <div id="empty-catalogue-message" style="display: none; text-align: center; padding: 3rem 1rem;">
-          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎨</div>
-          <h3 class="heading" style="font-size: 1.3rem;">No Artworks Found</h3>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0.35rem 0 1.25rem;">
-            Try adjusting your search query or expanding the price range slider.
-          </p>
-          <button id="empty-state-reset-btn" class="btn btn-primary btn-sm">Reset All Filters</button>
-        </div>
-
-      </div>
-    </section>
-
-  </div>
-
-  <!-- ======================================================================
-       VIEW 2: DEDICATED LOGIN / REGISTER VIEW (Classic Colours)
-       ====================================================================== -->
-  <div id="view-auth" class="auth-page" style="display: none;">
-    <div class="auth-card">
-      
-      <div class="auth-header">
-        <div class="brand-icon" style="margin: 0 auto 0.75rem; width: 44px; height: 44px;">✦</div>
-        <h2 class="heading">Collector & Curator Portal</h2>
-        <p>Sign in to manage your collection or explore curator tools.</p>
-      </div>
-
-      <!-- Toggle Tabs -->
-      <div class="auth-tabs">
-        <button id="tab-login" class="auth-tab active">Sign In</button>
-        <button id="tab-register" class="auth-tab">Create Account</button>
-      </div>
-
-      <!-- Login Form -->
-      <form id="login-form">
-        <div class="form-group">
-          <label for="login-email">Email Address</label>
-          <input type="email" id="login-email" class="form-input" placeholder="alex@collector.io" required />
-          <div id="err-login-email" class="error-msg">Enter a valid email address</div>
-        </div>
-
-        <div class="form-group">
-          <label for="login-password">Password</label>
-          <input type="password" id="login-password" class="form-input" placeholder="••••••••" required />
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">
-          Sign In
-        </button>
-      </form>
-
-      <!-- Register Form -->
-      <form id="register-form" style="display: none;">
-        <div class="form-group">
-          <label for="reg-name">Full Name</label>
-          <input type="text" id="reg-name" class="form-input" placeholder="Alex Vance" required />
-          <div id="err-reg-name" class="error-msg">Name is required</div>
-        </div>
-
-        <div class="form-group">
-          <label for="reg-email">Email Address</label>
-          <input type="email" id="reg-email" class="form-input" placeholder="alex@collector.io" required />
-          <div id="err-reg-email" class="error-msg">Valid email required</div>
-        </div>
-
-        <div class="form-group">
-          <label for="reg-role">Account Role</label>
-          <select id="reg-role" class="form-input" style="cursor: pointer;">
-            <option value="collector">Collector / Buyer</option>
-            <option value="admin">Curator / Gallery Admin</option>
+      <div class="filters">
+        <div class="pills" id="pills"></div>
+        <div class="filter-row">
+          <label><span data-i18n="maxPrice">Max price</span>: <strong id="priceLabel">$1000</strong>
+            <input type="range" id="priceRange" min="50" max="1000" step="10" value="1000">
+          </label>
+          <select id="sort">
+            <option value="featured" data-i18n="featured">Featured</option>
+            <option value="low" data-i18n="low">Price: Low to High</option>
+            <option value="high" data-i18n="high">Price: High to Low</option>
+            <option value="rating" data-i18n="rating">Highest Rated</option>
           </select>
         </div>
-
-        <div class="form-group">
-          <label for="reg-password">Password (min 6 characters)</label>
-          <input type="password" id="reg-password" class="form-input" placeholder="••••••••" required />
-          <div id="password-strength-label" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">
-            Strength: None
-          </div>
-          <div id="err-reg-password" class="error-msg">Password must be at least 6 characters</div>
-        </div>
-
-        <div class="form-group">
-          <label for="reg-confirm-password">Confirm Password</label>
-          <input type="password" id="reg-confirm-password" class="form-input" placeholder="••••••••" required />
-          <div id="err-reg-confirm" class="error-msg">Passwords must match</div>
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">
-          Create Collector Account
-        </button>
-      </form>
-
-      <!-- Quick 1-Click Demo Buttons -->
-      <div class="demo-login-box">
-        <p>Or test instantly with 1-click demo profiles:</p>
-        <div class="demo-btns-grid">
-          <button type="button" id="demo-collector-btn" class="btn btn-secondary btn-sm">
-            👤 Demo Collector
-          </button>
-          <button type="button" id="demo-admin-btn" class="btn btn-outline btn-sm">
-            🛡️ Demo Admin / Curator
-          </button>
-        </div>
       </div>
 
-    </div>
-  </div>
+      <p class="muted" id="resultCount"></p>
+      <div class="grid" id="grid"></div>
+    </section>
 
-  <!-- ======================================================================
-       VIEW 3: ADMIN STUDIO (Full CRUD Control)
-       ====================================================================== -->
-  <div id="view-admin" class="admin-view" style="display: none;">
-    <div class="container">
-      
-      <div class="section-head">
+    <!-- AUTH VIEW (shown first) -->
+    <section id="view-auth" class="view hidden">
+      <div class="card auth-card">
+        <div class="tabs">
+          <button class="tab active" data-tab="login" data-i18n="login">Login</button>
+          <button class="tab" data-tab="register" data-i18n="register">Register</button>
+        </div>
+
+        <form id="loginForm" novalidate>
+          <label><span data-i18n="email">Email</span> <input type="email" id="loginEmail"></label>
+          <small class="error" id="loginEmailErr"></small>
+          <label><span data-i18n="password">Password</span> <input type="password" id="loginPass"></label>
+          <small class="error" id="loginPassErr"></small>
+          <button class="btn full" type="submit" data-i18n="login">Login</button>
+        </form>
+
+        <form id="registerForm" class="hidden" novalidate>
+          <label><span data-i18n="fullName">Full name</span> <input type="text" id="regName"></label>
+          <small class="error" id="regNameErr"></small>
+          <label><span data-i18n="email">Email</span> <input type="email" id="regEmail"></label>
+          <small class="error" id="regEmailErr"></small>
+          <label><span data-i18n="password">Password</span> <input type="password" id="regPass"></label>
+          <small class="error" id="regPassErr"></small>
+          <label><span data-i18n="confirmPass">Confirm password</span> <input type="password" id="regConfirm"></label>
+          <small class="error" id="regConfirmErr"></small>
+          <label><span data-i18n="role">Role</span>
+            <select id="regRole">
+              <option value="collector" data-i18n="collectorRole">Collector / Buyer</option>
+              <option value="admin" data-i18n="adminRole">Admin / Curator</option>
+            </select>
+          </label>
+          <button class="btn full" type="submit" data-i18n="createAccount">Create account</button>
+        </form>
+
+        <div class="demo">
+          <p class="muted" data-i18n="demoLogin">Quick demo login:</p>
+          <button class="btn btn-outline" data-demo="collector" data-i18n="collectorDemo">Collector demo</button>
+          <button class="btn btn-outline" data-demo="admin" data-i18n="adminDemo">Admin demo</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADMIN VIEW -->
+    <section id="view-admin" class="view hidden">
+      <div class="admin-head">
+        <h2 data-i18n="adminDash">Admin Dashboard</h2>
         <div>
-          <span class="badge" style="margin-bottom: 0.4rem;">Curator Suite</span>
-          <h2 class="heading" style="font-size: 2rem;">Admin Gallery Studio</h2>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">
-            Add, update, or remove artworks directly in the live catalogue.
-          </p>
-        </div>
-
-        <div style="display: flex; gap: 0.75rem;">
-          <button id="admin-restore-btn" class="btn btn-secondary">
-            Reset to Master Collection
-          </button>
-          <button id="admin-create-art-btn" class="btn btn-primary">
-            + Add New Artwork
-          </button>
+          <button class="btn btn-outline" id="resetBtn" data-i18n="resetData">Reset data</button>
+          <button class="btn" id="addArtBtn" data-i18n="addArt">+ Add artwork</button>
         </div>
       </div>
-
-      <!-- Quick Stats -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <span>Platform Volume</span>
-          <strong id="stat-rev-val">$14,820</strong>
-        </div>
-        <div class="stat-card">
-          <span>Active Artworks</span>
-          <strong id="stat-art-count">14</strong>
-        </div>
-        <div class="stat-card">
-          <span>Total Orders</span>
-          <strong id="stat-order-count">28</strong>
-        </div>
-        <div class="stat-card">
-          <span>Collector Satisfaction</span>
-          <strong id="stat-rating-val">4.9 ★</strong>
-        </div>
-      </div>
-
-      <!-- Management Table -->
+      <div class="stats" id="stats"></div>
       <div class="table-wrap">
-        <table class="table">
+        <table>
           <thead>
-            <tr>
-              <th>Artwork</th>
-              <th>Artist</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Rating</th>
-              <th>Spotlight Status</th>
-              <th>Actions</th>
-            </tr>
+            <tr><th data-i18n="thArt">Artwork</th><th data-i18n="thCat">Category</th><th data-i18n="thPrice">Price</th><th data-i18n="featured">Featured</th><th data-i18n="thActions">Actions</th></tr>
           </thead>
-          <tbody id="admin-artworks-tbody">
-            <!-- Populated by JS -->
-          </tbody>
+          <tbody id="adminTable"></tbody>
         </table>
       </div>
+    </section>
+  </main>
 
-    </div>
-  </div>
-
-  <!-- ======================================================================
-       VIEW 4: ORDERS & RECEIPTS HISTORY
-       ====================================================================== -->
-  <div id="view-orders" style="display: none; padding: 3rem 0 5rem;">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <h2 class="heading" style="font-size: 2rem;">My Orders & Digital Asset Vault</h2>
-          <p style="color: var(--text-muted); font-size: 0.9rem;">
-            Access and download your acquired masterworks and authenticity certificates.
-          </p>
-        </div>
-      </div>
-
-      <div id="orders-history-list" style="display: flex; flex-direction: column; gap: 1.25rem;">
-        <!-- Populated by JS -->
-      </div>
-    </div>
-  </div>
-
-  <!-- ======================================================================
-       SLIDE-OVER SHOPPING CART DRAWER
-       ====================================================================== -->
-  <div id="cart-drawer-backdrop" class="cart-drawer-overlay">
-    <div class="cart-drawer">
-      
-      <div class="cart-header">
-        <h3 class="heading" style="font-size: 1.2rem;">Collector Bag (<span id="cart-drawer-count">0</span>)</h3>
-        <button id="cart-close-btn" class="modal-close" style="position: static;">✕</button>
-      </div>
-
-      <!-- Cart Items -->
-      <div id="cart-items-container" class="cart-body">
-        <!-- Rendered by JS -->
-      </div>
-
-      <!-- Empty Cart Message -->
-      <div id="cart-empty-msg" style="display: none; text-align: center; padding: 3rem 1rem;">
-        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🛍️</div>
-        <h4 class="heading" style="font-size: 1.1rem;">Your Bag is Empty</h4>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.25rem 0 1.25rem;">
-          Explore the catalogue and add digital masterworks.
-        </p>
-        <button id="cart-explore-btn" class="btn btn-primary btn-sm">Explore Gallery</button>
-      </div>
-
-      <!-- Cart Footer -->
-      <div id="cart-summary-footer" class="cart-footer">
-        
-        <!-- Promo code input -->
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-          <input type="text" id="cart-promo-input" class="form-input" placeholder="Promo code (try 'NEO2026')" style="text-transform: uppercase;" />
-          <button id="cart-apply-promo-btn" class="btn btn-secondary btn-sm">Apply</button>
-        </div>
-        <div id="cart-promo-feedback" style="font-size: 0.75rem; color: var(--emerald); display: none; margin-bottom: 0.5rem;">
-          ✓ Code NEO2026 applied: 10% discount!
-        </div>
-
-        <div class="cart-summary-row">
-          <span>Subtotal</span>
-          <span id="cart-subtotal-text">$0</span>
-        </div>
-
-        <div id="cart-discount-line" class="cart-summary-row" style="display: none; color: var(--emerald);">
-          <span>Discount (10%)</span>
-          <span id="cart-discount-text">-$0</span>
-        </div>
-
-        <div class="cart-summary-row">
-          <span>Platform & Provenance Fee (2.5%)</span>
-          <span id="cart-fee-text">$0</span>
-        </div>
-
-        <div class="cart-summary-row total">
-          <span>Total Investment</span>
-          <span id="cart-total-text">$0</span>
-        </div>
-
-        <button id="cart-checkout-proceed-btn" class="btn btn-primary" style="width: 100%; padding: 0.8rem; margin-top: 1rem;">
-          Proceed to Checkout
-        </button>
-
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ======================================================================
-       ARTWORK DETAIL MODAL
-       ====================================================================== -->
-  <div id="detail-modal" class="modal-overlay">
-    <div class="modal-content">
-      <button id="detail-modal-close-btn" class="modal-close">✕</button>
-
-      <div class="modal-grid">
-        <!-- Image Preview -->
-        <div class="modal-img-box">
-          <img id="detail-img" src="" alt="Artwork Preview" style="width: 100%; height: 100%; object-fit: cover;" />
-        </div>
-
-        <!-- Details & License -->
-        <div>
-          <span class="badge" id="detail-edition-tag" style="margin-bottom: 0.5rem;">1 of 1 Edition</span>
-          <h2 class="heading" id="detail-title" style="font-size: 1.6rem; margin-bottom: 0.75rem;">Artwork Title</h2>
-          
-          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1rem;">
-            <img id="detail-artist-avatar" src="" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" />
-            <div>
-              <div id="detail-artist-name" style="font-weight: 700; font-size: 0.85rem;">Elena Rostova</div>
-              <div id="detail-artist-handle" style="font-size: 0.72rem; color: var(--text-muted);">@elena_3d</div>
-            </div>
-          </div>
-
-          <p id="detail-desc" style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem;">
-            Description of the artwork.
-          </p>
-
-          <!-- Specs -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.25rem;">
-            <div class="spec-box">
-              <span>Resolution</span>
-              <strong id="detail-res">8K (7680 × 4320)</strong>
-            </div>
-            <div class="spec-box">
-              <span>Format</span>
-              <strong id="detail-fmt">Blender (.blend) + TIFF</strong>
-            </div>
-            <div class="spec-box">
-              <span>File Size</span>
-              <strong id="detail-size">1.4 GB</strong>
-            </div>
-            <div class="spec-box">
-              <span>Software</span>
-              <strong id="detail-soft">Blender / Octane</strong>
-            </div>
-          </div>
-
-          <!-- License Selector -->
-          <div style="background-color: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1.25rem;">
-            <div style="font-size: 0.75rem; font-weight: 700; margin-bottom: 0.4rem;">Choose License Option:</div>
-            <div style="display: flex; gap: 1rem;">
-              <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; cursor: pointer;">
-                <input type="radio" name="modal-lic" value="personal" checked id="lic-personal" />
-                <span>Personal License</span>
-              </label>
-              <label style="display: flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; cursor: pointer;">
-                <input type="radio" name="modal-lic" value="commercial" id="lic-commercial" />
-                <span>Commercial (2.2x)</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Price & Add -->
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
-            <div>
-              <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Total</span>
-              <div id="detail-price-text" style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">$340</div>
-            </div>
-
-            <button id="detail-add-bag-btn" class="btn btn-primary" style="flex: 1;">
-              Add to Bag
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Reviews Section -->
-      <div class="reviews-box">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-          <h3 class="heading" style="font-size: 1.2rem;">Collector Reviews</h3>
-          <span style="font-size: 0.9rem; font-weight: 700; color: var(--gold);" id="detail-rating-summary">★ 4.9 (24 Reviews)</span>
-        </div>
-
-        <!-- Add Review Form -->
-        <div class="review-form">
-          <h4 style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem;">Leave a Collector Evaluation</h4>
-          
-          <div class="star-picker" id="star-picker">
-            <span class="star active" data-v="1">★</span>
-            <span class="star active" data-v="2">★</span>
-            <span class="star active" data-v="3">★</span>
-            <span class="star active" data-v="4">★</span>
-            <span class="star active" data-v="5">★</span>
-            <span id="star-score-text" style="font-size: 0.8rem; font-weight: 600; color: var(--gold); margin-left: 0.5rem; align-self: center;">5 Stars</span>
-          </div>
-
-          <textarea id="review-text-input" class="review-textarea" placeholder="Share your feedback on textures, lighting, and fidelity..."></textarea>
-          <div id="err-review" class="error-msg" style="margin-bottom: 0.5rem;">Please write a comment before submitting</div>
-
-          <button id="review-submit-btn" class="btn btn-primary btn-sm">Submit Review</button>
-        </div>
-
-        <!-- Reviews List -->
-        <div id="detail-reviews-list" class="reviews-list">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ======================================================================
-       CHECKOUT MODAL (Multi-step)
-       ====================================================================== -->
-  <div id="checkout-modal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 580px;">
-      <button id="checkout-close-btn" class="modal-close">✕</button>
-
-      <!-- Step 1: Billing -->
-      <div id="checkout-step-1">
-        <h3 class="heading" style="font-size: 1.4rem; margin-bottom: 0.35rem;">Billing & Collector Details</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Enter your contact information for the cryptographic certificate.</p>
-
-        <form id="checkout-billing-form">
-          <div class="form-group">
-            <label for="ch-name">Full Collector Name</label>
-            <input type="text" id="ch-name" class="form-input" placeholder="Alex Vance" required />
-          </div>
-
-          <div class="form-group">
-            <label for="ch-email">Delivery Email Address</label>
-            <input type="email" id="ch-email" class="form-input" placeholder="alex@collector.io" required />
-          </div>
-
-          <div class="form-group">
-            <label for="ch-country">Country</label>
-            <select id="ch-country" class="form-input">
-              <option value="United States">United States</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="Germany">Germany</option>
-              <option value="Canada">Canada</option>
-              <option value="India">India</option>
-              <option value="Japan">Japan</option>
-            </select>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-            <div>
-              <span style="font-size: 0.75rem; color: var(--text-muted);">Total to Pay:</span>
-              <strong id="ch-total-preview" style="font-size: 1.25rem; color: var(--primary); margin-left: 0.35rem;">$0</strong>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Continue to Payment</button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Step 2: Payment Rails -->
-      <div id="checkout-step-2" style="display: none;">
-        <h3 class="heading" style="font-size: 1.4rem; margin-bottom: 0.35rem;">Simulated Payment Rails</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Select simulated payment method to unlock your master file.</p>
-
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.5rem;">
-          <button type="button" class="btn btn-primary btn-sm pay-tab-btn active" data-m="card">💳 Card</button>
-          <button type="button" class="btn btn-secondary btn-sm pay-tab-btn" data-m="upi">⚡ Instant UPI</button>
-          <button type="button" class="btn btn-secondary btn-sm pay-tab-btn" data-m="crypto">🦊 Web3 Crypto</button>
-        </div>
-
-        <form id="checkout-payment-form">
-          <div id="pay-card-section">
-            <div class="form-group">
-              <label for="card-num-input">Card Number</label>
-              <input type="text" id="card-num-input" class="form-input" value="4242 8890 1234 5678" required />
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-              <div class="form-group">
-                <label for="card-exp-input">Expiry Date</label>
-                <input type="text" id="card-exp-input" class="form-input" value="10/28" required />
-              </div>
-              <div class="form-group">
-                <label for="card-cvc-input">CVC</label>
-                <input type="text" id="card-cvc-input" class="form-input" value="888" required />
-              </div>
-            </div>
-          </div>
-
-          <div id="pay-upi-section" style="display: none; text-align: center; padding: 1rem; background-color: var(--bg-subtle); border-radius: var(--radius-md); margin-bottom: 1rem;">
-            <p style="font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem;">Scan QR or Enter UPI Virtual ID</p>
-            <input type="text" class="form-input" value="alex@okaxis" style="max-width: 280px; margin: 0 auto;" />
-          </div>
-
-          <div id="pay-crypto-section" style="display: none; text-align: center; padding: 1.25rem; background-color: var(--bg-subtle); border-radius: var(--radius-md); margin-bottom: 1rem;">
-            <p style="font-size: 0.85rem; font-weight: 600;">MetaMask Connected</p>
-            <p style="font-family: monospace; font-size: 0.75rem; color: var(--primary);">0x71C...8B42 (Ethereum Mainnet)</p>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-            <button type="button" id="pay-back-btn" class="btn btn-secondary">Back</button>
-            <button type="submit" class="btn btn-primary" style="background-color: var(--emerald);">Complete Purchase</button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Step 3: Receipt & Download Vault -->
-      <div id="checkout-step-3" style="display: none; text-align: center; padding: 1rem 0;">
-        <div style="font-size: 3rem; margin-bottom: 0.5rem;">🎉</div>
-        <h3 class="heading" style="font-size: 1.5rem;">Payment Successful!</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-          Your digital acquisition is confirmed and files are ready.
-        </p>
-        <p style="font-family: monospace; font-weight: 700; color: var(--primary); margin-bottom: 1.5rem;" id="receipt-id-text">
-          Receipt: #AETH-9821-X
-        </p>
-
-        <div id="receipt-items-list" style="display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 1.5rem; text-align: left;">
-          <!-- Items -->
-        </div>
-
-        <button id="receipt-done-btn" class="btn btn-primary" style="width: 100%;">Return to Gallery</button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ======================================================================
-       ADMIN ADD / EDIT ARTWORK MODAL
-       ====================================================================== -->
-  <div id="admin-modal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 580px;">
-      <button id="admin-modal-close-btn" class="modal-close">✕</button>
-
-      <h3 class="heading" id="admin-modal-heading" style="font-size: 1.4rem; margin-bottom: 0.35rem;">Add New Artwork</h3>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Publish directly to the live curated catalogue.</p>
-
-      <form id="admin-art-form">
-        <input type="hidden" id="admin-art-id" value="" />
-
-        <div class="form-group">
-          <label for="adm-title">Artwork Title</label>
-          <input type="text" id="adm-title" class="form-input" placeholder="e.g. Solaris Resonance" required />
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-          <div class="form-group">
-            <label for="adm-artist">Artist Name</label>
-            <input type="text" id="adm-artist" class="form-input" placeholder="Elena Rostova" required />
-          </div>
-          <div class="form-group">
-            <label for="adm-handle">Artist Handle</label>
-            <input type="text" id="adm-handle" class="form-input" placeholder="@elena_3d" required />
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-          <div class="form-group">
-            <label for="adm-category">Category</label>
-            <select id="adm-category" class="form-input">
-              <option value="3D Renders">3D Renders</option>
-              <option value="Abstract & Generative">Abstract & Generative</option>
-              <option value="Cyberpunk & Sci-Fi">Cyberpunk & Sci-Fi</option>
-              <option value="Illustrations">Illustrations</option>
-              <option value="Photography">Photography</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="adm-price">Price in USD ($)</label>
-            <input type="number" id="adm-price" class="form-input" placeholder="320" min="50" max="5000" required />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="adm-img">Image URL</label>
-          <input type="url" id="adm-img" class="form-input" placeholder="https://images.unsplash.com/..." required />
-        </div>
-
-        <div class="form-group">
-          <label for="adm-desc">Artwork Description</label>
-          <textarea id="adm-desc" class="form-input" style="min-height: 80px;" placeholder="Conceptual statement..."></textarea>
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
-          <input type="checkbox" id="adm-featured" style="accent-color: var(--primary);" />
-          <label for="adm-featured" style="font-size: 0.85rem; font-weight: 600; cursor: pointer;">Feature as Spotlight Drop Banner</label>
-        </div>
-
-        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
-          <button type="button" id="admin-modal-cancel" class="btn btn-secondary">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="admin-modal-save-btn">Save to Catalogue</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Toast Notification Wrapper -->
-  <div id="toast-wrap" class="toast-wrap"></div>
-
-  <!-- ======================================================================
-       Classic Footer
-       ====================================================================== -->
   <footer class="footer">
-    <div class="container" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-      <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <div class="brand-icon" style="width: 28px; height: 28px; font-size: 0.9rem;">✦</div>
-        <span style="font-weight: 700; color: var(--text-main);">AETHERIA</span>
-        <span>— Curated Digital Art Marketplace. Built with pure HTML, CSS, and JavaScript.</span>
-      </div>
-      <div>© 2026 AETHERIA. All rights reserved.</div>
-    </div>
+    <div class="container" data-i18n="footer">© 2026 ArtMart · CSE 326 Project · HTML, CSS &amp; JavaScript</div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- MODAL (detail / checkout / admin form / confirm) -->
+  <div class="overlay hidden" id="modal">
+    <div class="modal">
+      <button class="close" data-close>&times;</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- CART DRAWER -->
+  <div class="overlay hidden" id="cartOverlay">
+    <aside class="drawer">
+      <div class="drawer-head">
+        <h3 data-i18n="yourCart">Your Cart</h3>
+        <button class="close" data-close-cart>&times;</button>
+      </div>
+      <div id="cartItems" class="cart-items"></div>
+      <div class="cart-summary" id="cartSummary"></div>
+    </aside>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
   <script src="js/data.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
