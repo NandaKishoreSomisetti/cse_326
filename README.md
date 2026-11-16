@@ -8,6 +8,7 @@ Theme: Modern Gallery — off-white / cream canvas (#F9F8F6, #F4F0E2), deep char
 
 ## Features
 - **Logo & animation** — framed-landscape logo; after login, the logo draws itself on a welcome splash and fades into the main page.
+- **Voice Assistant** — 🎤 button (bottom-right): speak or type commands in English, Hindi or Telugu (e.g. "show photography", "search Kenji", "under 3000", "open cart", "add to cart", "checkout", "about us", "dark mode", "change language to Hindi"). Replies are spoken aloud (mute button available). Uses the browser Web Speech API — voice input works in Chrome, Edge and Safari; typing works everywhere.
 - **Login page first** — Login / Register with validation (email format, strong password, matching confirm password) and one-click **Collector demo** / **Admin demo** buttons.
 - **Language switch** — English, हिन्दी (Hindi), తెలుగు (Telugu), from the navbar or the login page (labels, buttons, errors, messages, artwork names, descriptions and artist bios).
 - **Spotlight Drop** banner with Add to Cart and Quick Preview.
@@ -28,6 +29,7 @@ js/data.js      artwork data and demo users
 js/i18n.js      UI translations (English, Hindi, Telugu)
 js/art-i18n.js  artwork titles, descriptions & bios in Hindi and Telugu
 js/app.js       all app logic
+js/voice.js     voice assistant (speech recognition + speech synthesis)
 ```
 
 ## Run locally
