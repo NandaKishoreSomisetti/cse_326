@@ -7,7 +7,7 @@ A modern, responsive, and highly interactive frontend web application built stri
 ## 🌐 Live Hosted Links
 
 * **Primary Direct Cloudflare Link (Zero Passwords / Instant Access):**
-  👉 **[https://legislative-spotlight-drew-deutsch.trycloudflare.com](https://legislative-spotlight-drew-deutsch.trycloudflare.com)**
+  👉 **[https://massive-housewares-wiki-warcraft.trycloudflare.com](https://massive-housewares-wiki-warcraft.trycloudflare.com)**
 
 * **Alternative Local Tunnel Link:**
   👉 **[https://aetheria-art.loca.lt](https://aetheria-art.loca.lt)** *(Tunnel Password: `117.251.86.143`)*
