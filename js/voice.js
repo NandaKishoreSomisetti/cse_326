@@ -74,10 +74,31 @@ function vaSay(msg) {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(msg.replace(/₹/g, "rupees "));
     u.lang = VA_LOCALE[lang];
-    const v = speechSynthesis.getVoices().find((x) => x.lang && x.lang.replace("_", "-").startsWith(lang));
+    const v = vaSoftVoice();
     if (v) u.voice = v;
+    // Soft, calm delivery
+    u.volume = 0.7;   // quieter (0–1)
+    u.rate = 0.88;    // a little slower than normal
+    u.pitch = 1.05;   // slightly gentle tone
     speechSynthesis.speak(u);
   } catch (e) {}
+}
+
+// Pick a soft-sounding voice for the current language when the device has one
+const VA_SOFT_VOICES = ["female", "samantha", "karen", "moira", "tessa", "veena", "lekha", "heera", "kalpana",
+  "swara", "shruti", "neerja", "aditi", "raveena", "google हिन्दी", "google తెలుగు", "zira", "aria", "jenny"];
+function vaSoftVoice() {
+  const voices = speechSynthesis.getVoices().filter((x) => x.lang && x.lang.replace("_", "-").toLowerCase().startsWith(lang));
+  if (!voices.length) return null;
+  const locale = VA_LOCALE[lang].toLowerCase();
+  const score = (x) => {
+    const name = x.name.toLowerCase();
+    let sc = 0;
+    if (VA_SOFT_VOICES.some((w) => name.includes(w))) sc += 2;
+    if (x.lang.replace("_", "-").toLowerCase() === locale) sc += 1;   // Indian accent first
+    return sc;
+  };
+  return voices.slice().sort((a, b) => score(b) - score(a))[0];
 }
 
 function vaLog(msg, who) {
