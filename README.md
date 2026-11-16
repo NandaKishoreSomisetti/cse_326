@@ -9,8 +9,9 @@ Theme: classic white gallery look with deep navy and gold, elegant serif heading
 ## Features
 - **Logo & animation** — framed-landscape logo; after login, the logo draws itself on a welcome splash and fades into the main page.
 - **Login page first** — Login / Register with validation (email format, strong password, matching confirm password) and one-click **Collector demo** / **Admin demo** buttons.
-- **Language switch** — English, हिन्दी (Hindi), తెలుగు (Telugu), from the navbar or the login page (labels, buttons, errors and messages).
+- **Language switch** — English, हिन्दी (Hindi), తెలుగు (Telugu), from the navbar or the login page (labels, buttons, errors, messages, artwork names, descriptions and artist bios).
 - **Spotlight Drop** banner with Add to Cart and Quick Preview.
+- **Prices in Indian Rupees (₹)** with Indian number format (e.g. ₹28,200).
 - **Catalogue** — 14 artworks, category pills, live search (title or artist), max-price slider, sort (Featured, Price Low→High, High→Low, Highest Rated).
 - **Artwork details** — large preview, artist bio, specs (resolution, file size, format, license) and **reviews** (1–5 stars + comment; empty reviews blocked).
 - **Cart drawer** — Personal (1x) / Commercial (2x) license, subtotal, 5% platform fee, remove items.
@@ -23,7 +24,8 @@ Theme: classic white gallery look with deep navy and gold, elegant serif heading
 index.html      page structure
 css/style.css   styles (theme colors at the top)
 js/data.js      artwork data and demo users
-js/i18n.js      translations (English, Hindi, Telugu)
+js/i18n.js      UI translations (English, Hindi, Telugu)
+js/art-i18n.js  artwork titles, descriptions & bios in Hindi and Telugu
 js/app.js       all app logic
 ```
 

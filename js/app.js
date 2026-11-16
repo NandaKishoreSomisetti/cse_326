@@ -14,30 +14,30 @@ const store = {
 };
 
 // ---------- State ----------
-let artworks = store.get("am_artworks", null) || JSON.parse(JSON.stringify(initialArtworks));
-let cart = store.get("am_cart", []);          // [{id, license}]
+let artworks = store.get("am_artworks_inr", null) || JSON.parse(JSON.stringify(initialArtworks));
+let cart = store.get("am_cart_inr", []);          // [{id, license}]
 let user = store.get("am_user", null);
 let users = store.get("am_users", []);
-let orders = store.get("am_orders", []);
-let filters = { category: "All", search: "", maxPrice: 1000, sort: "featured" };
+let orders = store.get("am_orders_inr", []);
+let filters = { category: "All", search: "", maxPrice: 50000, sort: "featured" };
 
 const FEE_RATE = 0.05;
 const LICENSES = { personal: { label: "Personal", mult: 1 }, commercial: { label: "Commercial", mult: 2 } };
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
-const money = (n) => "$" + n.toFixed(2);
+const money = (n) => "₹" + n.toLocaleString("en-IN", { maximumFractionDigits: 2 });
 const small = (url, w) => url.replace(/w=\d+/, "w=" + w);   // load lighter images
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const stars = (r) => "★".repeat(Math.round(r)) + "☆".repeat(5 - Math.round(r));
 const findArt = (id) => artworks.find((a) => a.id === id);
 
 function save() {
-  store.set("am_artworks", artworks);
-  store.set("am_cart", cart);
+  store.set("am_artworks_inr", artworks);
+  store.set("am_cart_inr", cart);
   store.set("am_user", user);
   store.set("am_users", users);
-  store.set("am_orders", orders);
+  store.set("am_orders_inr", orders);
 }
 
 function toast(msg) {
@@ -67,14 +67,14 @@ function renderNav() {
 // ---------- Hero ----------
 function renderHero() {
   const art = artworks.find((a) => a.featured) || artworks[0];
-  if (!art) { $("#hero").innerHTML = "<p class='muted'>No artworks yet.</p>"; return; }
+  if (!art) { $("#hero").innerHTML = "<p class='muted'>" + t("noArt") + "</p>"; return; }
   $("#hero").innerHTML = `
-    <div class="frame"><img src="${small(art.image, 900)}" alt="${esc(art.title)}"></div>
+    <div class="frame"><img src="${small(art.image, 900)}" alt="${esc(artTitle(art))}"></div>
     <div>
       <span class="tag">${t("spotlight")}</span>
-      <h1>${esc(art.title)}</h1>
+      <h1>${esc(artTitle(art))}</h1>
       <p>${t("by")} ${esc(art.artist.name)} · ${t(art.category)}</p>
-      <p>${esc(art.description).slice(0, 140)}...</p>
+      <p>${esc(artDesc(art)).slice(0, 140)}...</p>
       <div class="price">${money(art.price)}</div>
       <div class="actions">
         <button class="btn" onclick="addToCart('${art.id}')">${t("addToCart")}</button>
@@ -94,7 +94,7 @@ function renderGrid() {
   let list = artworks.filter((a) =>
     (filters.category === "All" || a.category === filters.category) &&
     a.price <= filters.maxPrice &&
-    (a.title.toLowerCase().includes(q) || a.artist.name.toLowerCase().includes(q)));
+    (a.title.toLowerCase().includes(q) || artTitle(a).toLowerCase().includes(q) || a.artist.name.toLowerCase().includes(q)));
 
   if (filters.sort === "low") list.sort((a, b) => a.price - b.price);
   if (filters.sort === "high") list.sort((a, b) => b.price - a.price);
@@ -105,7 +105,7 @@ function renderGrid() {
   $("#grid").innerHTML = list.length ? list.map((a) => `
     <div class="card art-card" onclick="openDetail('${a.id}')">
       <div class="art-img">
-        <img src="${small(a.image, 500)}" alt="${esc(a.title)}" loading="lazy">
+        <img src="${small(a.image, 500)}" alt="${esc(artTitle(a))}" loading="lazy">
         <span class="cat-badge">${t(a.category)}</span>
         <div class="quick">
           <button onclick="event.stopPropagation(); openDetail('${a.id}')">${t("view")}</button>
@@ -113,7 +113,7 @@ function renderGrid() {
         </div>
       </div>
       <div class="art-body">
-        <h4>${esc(a.title)}</h4>
+        <h4>${esc(artTitle(a))}</h4>
         <div class="artist"><img src="${small(a.artist.avatar, 60)}" alt="">${esc(a.artist.name)}</div>
         <div class="art-foot">
           <span class="stars">${stars(a.rating)} <span class="muted">${a.rating.toFixed(1)}</span></span>
@@ -142,19 +142,19 @@ function openDetail(id) {
   openModal(`
     <div class="detail">
       <div>
-        <div class="frame"><img src="${small(a.image, 900)}" alt="${esc(a.title)}"></div>
-        <div class="bio"><strong>${esc(a.artist.name)}</strong><br>${esc(a.artist.bio || "Digital artist.")}</div>
+        <div class="frame"><img src="${small(a.image, 900)}" alt="${esc(artTitle(a))}"></div>
+        <div class="bio"><strong>${esc(a.artist.name)}</strong><br>${esc(artBio(a))}</div>
       </div>
       <div>
         <span class="muted">${t(a.category)}</span>
-        <h2>${esc(a.title)}</h2>
+        <h2>${esc(artTitle(a))}</h2>
         <div class="stars">${stars(a.rating)} <span class="muted">${a.rating.toFixed(1)} (${a.reviewCount} ${t("reviewWord")})</span></div>
-        <p style="margin-top:10px">${esc(a.description)}</p>
+        <p style="margin-top:10px">${esc(artDesc(a))}</p>
         <div class="specs">
           <div><b>${t("resolution")}</b>${esc(a.resolution || "-")}</div>
           <div><b>${t("fileSize")}</b>${esc(a.fileSize || "-")}</div>
           <div><b>${t("format")}</b>${esc(a.format || "-")}</div>
-          <div><b>${t("license")}</b>Personal / Commercial</div>
+          <div><b>${t("license")}</b>${t("licVal")}</div>
         </div>
         <h2>${money(a.price)}</h2>
         <button class="btn full" onclick="addToCart('${a.id}')">${t("addToCart")}</button>
@@ -195,7 +195,7 @@ function submitReview(id) {
   if (text.length < 5) { err.textContent = t("errReviewLen"); return; }
 
   a.reviews = a.reviews || [];
-  a.reviews.unshift({ id: "rev-" + Date.now(), user: user.name, rating: pickedRating, date: "Just now", comment: text });
+  a.reviews.unshift({ id: "rev-" + Date.now(), user: user.name, rating: pickedRating, date: t("justNow"), comment: text });
   a.rating = (a.rating * a.reviewCount + pickedRating) / (a.reviewCount + 1);
   a.reviewCount += 1;
   save();
@@ -236,7 +236,7 @@ function renderCart() {
       <div class="cart-item">
         <img src="${small(a.image, 150)}" alt="">
         <div class="info">
-          <strong>${esc(a.title)}</strong>
+          <strong>${esc(artTitle(a))}</strong>
           <div class="muted">${esc(a.artist.name)}</div>
           <select onchange="setLicense(${i}, this.value)">
             <option value="personal" ${c.license === "personal" ? "selected" : ""}>${t("personalLic")}</option>
@@ -343,7 +343,7 @@ function placeOrder() {
   const order = {
     id: "ORD-" + Math.floor(100000 + Math.random() * 900000),
     date: new Date().toLocaleString(),
-    items: cart.map((c) => ({ title: findArt(c.id).title, license: LICENSES[c.license].label, price: findArt(c.id).price * LICENSES[c.license].mult })),
+    items: cart.map((c) => ({ title: artTitle(findArt(c.id)), license: LICENSES[c.license].label, price: findArt(c.id).price * LICENSES[c.license].mult })),
     total: tot.total, method: payMethod, name: billing.bName, email: billing.bEmail
   };
   orders.push(order);
@@ -443,7 +443,7 @@ function renderAdmin() {
     <div class="card stat"><span class="muted">${t("totalOrders")}</span><b>${orders.length}</b></div>`;
   $("#adminTable").innerHTML = artworks.map((a) => `
     <tr>
-      <td><img src="${small(a.image, 100)}" alt="">${esc(a.title)}<div class="muted">${esc(a.artist.name)}</div></td>
+      <td><img src="${small(a.image, 100)}" alt="">${esc(artTitle(a))}<div class="muted">${esc(a.artist.name)}</div></td>
       <td>${t(a.category)}</td>
       <td>${money(a.price)}</td>
       <td><input type="checkbox" style="width:auto" ${a.featured ? "checked" : ""} onchange="toggleFeatured('${a.id}', this.checked)"></td>
@@ -493,6 +493,7 @@ function artForm(id) {
     const data = { title, category: $("#fCat").value, price, image: img, description: desc, featured: $("#fFeat").checked };
     if (a) {
       Object.assign(a, data);
+      a.edited = true;
       a.artist.name = artist;
       toast(t("tUpdated"));
     } else {
@@ -515,7 +516,7 @@ function confirmDelete(id) {
   const a = findArt(id);
   openModal(`
     <h2>${t("delTitle")}</h2>
-    <p style="margin:12px 0">${t("delSure")} <strong>${esc(a.title)}</strong>? ${t("delNote")}</p>
+    <p style="margin:12px 0">${t("delSure")} <strong>${esc(artTitle(a))}</strong>? ${t("delNote")}</p>
     <button class="btn btn-danger" onclick="deleteArt('${id}')">${t("delYes")}</button>
     <button class="btn btn-outline" data-close>${t("cancel")}</button>`);
 }
@@ -541,7 +542,7 @@ function setupEvents() {
   });
 
   $("#search").addEventListener("input", (e) => { filters.search = e.target.value; showView("shop"); renderGrid(); });
-  $("#priceRange").addEventListener("input", (e) => { filters.maxPrice = +e.target.value; $("#priceLabel").textContent = "$" + e.target.value; renderGrid(); });
+  $("#priceRange").addEventListener("input", (e) => { filters.maxPrice = +e.target.value; $("#priceLabel").textContent = money(+e.target.value); renderGrid(); });
   $("#sort").addEventListener("change", (e) => { filters.sort = e.target.value; renderGrid(); });
   $("#pills").addEventListener("click", (e) => {
     if (!e.target.dataset.cat) return;
