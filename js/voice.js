@@ -72,22 +72,33 @@ function vaSay(msg) {
   if (vaMuted || !window.speechSynthesis) return;
   try {
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(msg.replace(/₹/g, "rupees "));
-    u.lang = VA_LOCALE[lang];
+    const text = msg.replace(/₹/g, "rupees ").replace(/[🎤🔊]/gu, "");
+    const parts = text.match(/[^.!?।:]+[.!?।:]*/g) || [text];
     const v = vaSoftVoice();
-    if (v) u.voice = v;
-    // Soft, calm delivery
-    u.volume = 0.7;   // quieter (0–1)
-    u.rate = 0.88;    // a little slower than normal
-    u.pitch = 1.05;   // slightly gentle tone
-    speechSynthesis.speak(u);
+    clearTimeout(vaSay.timer);
+    vaSay.timer = setTimeout(() => {
+      parts.forEach((part) => {
+        if (!part.trim()) return;
+        const u = new SpeechSynthesisUtterance(part.trim());
+        u.lang = VA_LOCALE[lang];
+        if (v) u.voice = v;
+        // Soft, calm delivery
+        u.volume = 0.7;   // quieter (0–1)
+        u.rate = 1.0;     // normal speed (no drag)
+        u.pitch = 1.05;   // slightly gentle tone
+        speechSynthesis.speak(u);
+      });
+    }, 60);
   } catch (e) {}
 }
 
 // Pick a soft-sounding voice for the current language when the device has one
 const VA_SOFT_VOICES = ["female", "samantha", "karen", "moira", "tessa", "veena", "lekha", "heera", "kalpana",
   "swara", "shruti", "neerja", "aditi", "raveena", "google हिन्दी", "google తెలుగు", "zira", "aria", "jenny"];
+const vaVoiceCache = {};
+if (window.speechSynthesis) speechSynthesis.addEventListener("voiceschanged", () => { for (const k in vaVoiceCache) delete vaVoiceCache[k]; });
 function vaSoftVoice() {
+  if (vaVoiceCache[lang]) return vaVoiceCache[lang];
   const voices = speechSynthesis.getVoices().filter((x) => x.lang && x.lang.replace("_", "-").toLowerCase().startsWith(lang));
   if (!voices.length) return null;
   const locale = VA_LOCALE[lang].toLowerCase();
@@ -96,9 +107,10 @@ function vaSoftVoice() {
     let sc = 0;
     if (VA_SOFT_VOICES.some((w) => name.includes(w))) sc += 2;
     if (x.lang.replace("_", "-").toLowerCase() === locale) sc += 1;   // Indian accent first
+    if (x.localService) sc += 4;                                      // on-device voice = no network lag
     return sc;
   };
-  return voices.slice().sort((a, b) => score(b) - score(a))[0];
+  return (vaVoiceCache[lang] = voices.slice().sort((a, b) => score(b) - score(a))[0]);
 }
 
 function vaLog(msg, who) {
@@ -127,7 +139,14 @@ function vaFindArt(text) {
   return best;
 }
 
-function vaGoShop() { showView("shop"); closeModal(); closeCart(); }
+function vaGoShop(toTop) {
+  closeModal(); closeCart();
+  if ($("#view-shop").classList.contains("hidden")) showView("shop");
+  setTimeout(() => {
+    if (toTop) window.scrollTo({ top: 0, behavior: "smooth" });
+    else $(".filters").scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 60);
+}
 
 // ---------- Command handler ----------
 function vaHandle(raw) {
@@ -253,7 +272,7 @@ function vaHandle(raw) {
 
   if (vaHas(text, "shop")) {
     if (vaNeedLogin()) return;
-    vaGoShop();
+    vaGoShop(true);
     return vaSay(t("vaShop"));
   }
 
@@ -283,12 +302,25 @@ function vaStartListening() {
   vaRec.interimResults = true;
   vaRec.maxAlternatives = 1;
   vaRec.onstart = () => { vaListening = true; vaSetListening(true); };
+  let done = false, quietTimer = null;
+  const finish = (text) => {
+    if (done) return;
+    done = true;
+    clearTimeout(quietTimer);
+    $("#vaInput").value = "";
+    try { vaRec.abort(); } catch (err) {}
+    vaHandle(text);
+  };
   vaRec.onresult = (e) => {
     const r = e.results[e.results.length - 1];
-    $("#vaInput").value = r[0].transcript;
-    if (r.isFinal) { $("#vaInput").value = ""; vaHandle(r[0].transcript); }
+    const text = r[0].transcript;
+    $("#vaInput").value = text;
+    if (r.isFinal) return finish(text);
+    clearTimeout(quietTimer);
+    quietTimer = setTimeout(() => finish(text), 800);   // user paused → respond right away
   };
   vaRec.onerror = (e) => {
+    if (done || e.error === "aborted") return;
     vaSay(e.error === "not-allowed" || e.error === "service-not-allowed" ? t("vaMicBlocked") :
           e.error === "no-speech" ? t("vaNoSpeech") : t("vaNotUnderstood"));
   };
@@ -307,8 +339,23 @@ function vaRenderChips() {
   $("#vaChips").innerHTML = VA_EXAMPLES[lang].map((x) => `<button type="button" class="va-chip">${x}</button>`).join("");
 }
 
+function vaWarmUp() {
+  if (vaWarmUp.done || !window.speechSynthesis) return;
+  vaWarmUp.done = true;
+  try { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); vaSoftVoice(); } catch (e) {}
+}
+
+function vaClosePanel() {
+  const p = $("#vaPanel");
+  if (p.classList.contains("hidden")) return;
+  p.classList.add("closing");
+  setTimeout(() => { p.classList.add("hidden"); p.classList.remove("closing"); }, 200);
+  if (vaListening) vaRec.abort();
+}
+
 function vaOpen() {
-  $("#vaPanel").classList.remove("hidden");
+  vaWarmUp();
+  $("#vaPanel").classList.remove("hidden", "closing");
   if (!$("#vaLog").children.length) vaLog(t("vaHello"), "bot");
 }
 
@@ -317,9 +364,9 @@ function vaSetup() {
   $("#vaMute").textContent = vaMuted ? "🔇" : "🔊";
   $("#vaBtn").addEventListener("click", () => {
     if ($("#vaPanel").classList.contains("hidden")) { vaOpen(); vaStartListening(); }
-    else $("#vaPanel").classList.add("hidden");
+    else vaClosePanel();
   });
-  $("#vaClose").addEventListener("click", () => { $("#vaPanel").classList.add("hidden"); if (vaListening) vaRec.stop(); });
+  $("#vaClose").addEventListener("click", vaClosePanel);
   $("#vaMic").addEventListener("click", vaStartListening);
   $("#vaMute").addEventListener("click", () => {
     vaMuted = !vaMuted;
