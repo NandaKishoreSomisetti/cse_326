@@ -1,7 +1,7 @@
 # ArtMart — Digital Art Marketplace
 
 A simple, clean digital art marketplace built with **plain HTML, CSS and JavaScript** (no frameworks).
-Theme: classic white gallery look with deep navy and gold, elegant serif headings (optional night mode).
+Theme: Modern Gallery — off-white / cream canvas (#F9F8F6, #F4F0E2), deep charcoal text (#1A1A1A) and terracotta call-to-action accent (#C86D51); optional dark mode.
 
 ## 🌐 Live Link
 👉 **https://massive-housewares-wiki-warcraft.trycloudflare.com**
