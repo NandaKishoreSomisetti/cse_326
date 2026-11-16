@@ -14,12 +14,12 @@ const store = {
 };
 
 // ---------- State ----------
-let artworks = store.get("am_artworks_inr", null) || JSON.parse(JSON.stringify(initialArtworks));
-let cart = store.get("am_cart_inr", []);          // [{id, license}]
+let artworks = store.get("am_artworks_v3", null) || JSON.parse(JSON.stringify(initialArtworks));
+let cart = store.get("am_cart_v3", []);          // [{id, license}]
 let user = store.get("am_user", null);
 let users = store.get("am_users", []);
-let orders = store.get("am_orders_inr", []);
-let filters = { category: "All", search: "", maxPrice: 50000, sort: "featured" };
+let orders = store.get("am_orders_v3", []);
+let filters = { category: "All", search: "", maxPrice: 5000, sort: "featured" };
 
 const FEE_RATE = 0.05;
 const LICENSES = { personal: { label: "Personal", mult: 1 }, commercial: { label: "Commercial", mult: 2 } };
@@ -33,11 +33,11 @@ const stars = (r) => "★".repeat(Math.round(r)) + "☆".repeat(5 - Math.round(r
 const findArt = (id) => artworks.find((a) => a.id === id);
 
 function save() {
-  store.set("am_artworks_inr", artworks);
-  store.set("am_cart_inr", cart);
+  store.set("am_artworks_v3", artworks);
+  store.set("am_cart_v3", cart);
   store.set("am_user", user);
   store.set("am_users", users);
-  store.set("am_orders_inr", orders);
+  store.set("am_orders_v3", orders);
 }
 
 function toast(msg) {
@@ -50,8 +50,13 @@ function toast(msg) {
 
 // ---------- Views ----------
 function showView(name) {
-  if (!user) name = "auth";                         // login page comes first
+  if (!user && name !== "about") name = "auth";     // login page comes first (About Us is public)
   if (name === "admin" && user.role !== "admin") name = "shop";
+  if (name === "about") {
+    $("#statArtCount").textContent = artworks.length;
+    $("#statArtistCount").textContent = new Set(artworks.map((a) => a.artist.name)).size;
+    $("#statCatCount").textContent = CATEGORIES.length - 1;
+  }
   $$(".view").forEach((v) => v.classList.add("hidden"));
   $("#view-" + name).classList.remove("hidden");
   if (name === "admin") renderAdmin();

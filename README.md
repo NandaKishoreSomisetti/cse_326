@@ -11,7 +11,8 @@ Theme: Modern Gallery — off-white / cream canvas (#F9F8F6, #F4F0E2), deep char
 - **Login page first** — Login / Register with validation (email format, strong password, matching confirm password) and one-click **Collector demo** / **Admin demo** buttons.
 - **Language switch** — English, हिन्दी (Hindi), తెలుగు (Telugu), from the navbar or the login page (labels, buttons, errors, messages, artwork names, descriptions and artist bios).
 - **Spotlight Drop** banner with Add to Cart and Quick Preview.
-- **Prices in Indian Rupees (₹)** with Indian number format (e.g. ₹28,200).
+- **Prices in Indian Rupees (₹)** from ₹1,000 to ₹5,000, in Indian number format.
+- **About Us page** — story, mission, what we offer, live stats and contact (public, no login needed).
 - **Catalogue** — 14 artworks, category pills, live search (title or artist), max-price slider, sort (Featured, Price Low→High, High→Low, Highest Rated).
 - **Artwork details** — large preview, artist bio, specs (resolution, file size, format, license) and **reviews** (1–5 stars + comment; empty reviews blocked).
 - **Cart drawer** — Personal (1x) / Commercial (2x) license, subtotal, 5% platform fee, remove items.

@@ -15,7 +15,7 @@ const initialArtworks = [
       verified: true
     },
     category: "3D Renders",
-    price: 28200,
+    price: 3100,
     ethPrice: 0.14,
     image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=85",
     resolution: "7680 × 4320 (8K)",
@@ -62,7 +62,7 @@ const initialArtworks = [
       verified: true
     },
     category: "Abstract & Generative",
-    price: 21600,
+    price: 2000,
     ethPrice: 0.11,
     image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1600&q=85",
     resolution: "6000 × 4000 (6K)",
@@ -100,7 +100,7 @@ const initialArtworks = [
       verified: true
     },
     category: "Cyberpunk & Sci-Fi",
-    price: 34900,
+    price: 4100,
     ethPrice: 0.18,
     image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1600&q=85",
     resolution: "7680 × 3240 (Ultrawide 8K)",
@@ -138,7 +138,7 @@ const initialArtworks = [
       verified: true
     },
     category: "3D Renders",
-    price: 24100,
+    price: 2400,
     ethPrice: 0.12,
     image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=85",
     resolution: "4096 × 4096 (1:1 4K)",
@@ -176,7 +176,7 @@ const initialArtworks = [
       verified: true
     },
     category: "Abstract & Generative",
-    price: 16200,
+    price: 1200,
     ethPrice: 0.08,
     image: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?auto=format&fit=crop&w=1600&q=85",
     resolution: "5120 × 2880 (5K iMac Pro)",
@@ -214,7 +214,7 @@ const initialArtworks = [
       verified: true
     },
     category: "Cyberpunk & Sci-Fi",
-    price: 40700,
+    price: 5000,
     ethPrice: 0.21,
     image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1600&q=85",
     resolution: "8192 × 4608 (8K Cinema)",
@@ -252,7 +252,7 @@ const initialArtworks = [
       verified: true
     },
     category: "Illustrations",
-    price: 14900,
+    price: 1000,
     ethPrice: 0.075,
     image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1600&q=85",
     resolution: "Infinite Vector SVG + 8K PNG",
@@ -290,7 +290,7 @@ const initialArtworks = [
       verified: true
     },
     category: "Photography",
-    price: 31500,
+    price: 3600,
     ethPrice: 0.16,
     image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1600&q=85",
     resolution: "11664 × 8750 (100MP Hasselblad)",
@@ -328,7 +328,7 @@ const initialArtworks = [
       verified: true
     },
     category: "Abstract & Generative",
-    price: 17400,
+    price: 1400,
     ethPrice: 0.09,
     image: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1600&q=85",
     resolution: "4096 × 4096 (4K Square)",
@@ -366,7 +366,7 @@ const initialArtworks = [
       verified: true
     },
     category: "3D Renders",
-    price: 29900,
+    price: 3300,
     ethPrice: 0.15,
     image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=85",
     resolution: "7680 × 4320 (8K)",
@@ -404,7 +404,7 @@ const initialArtworks = [
       verified: true
     },
     category: "Photography",
-    price: 25700,
+    price: 2700,
     ethPrice: 0.13,
     image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1600&q=85",
     resolution: "6000 × 4000 (Sony Alpha 1)",
@@ -442,7 +442,7 @@ const initialArtworks = [
       verified: true
     },
     category: "Illustrations",
-    price: 18300,
+    price: 1500,
     ethPrice: 0.09,
     image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1600&q=85",
     resolution: "Vector SVG + 8K High-DPI PNG",
@@ -480,7 +480,7 @@ const initialArtworks = [
       verified: true
     },
     category: "Cyberpunk & Sci-Fi",
-    price: 37400,
+    price: 4500,
     ethPrice: 0.19,
     image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1600&q=85",
     resolution: "7680 × 4320 (8K)",
@@ -518,7 +518,7 @@ const initialArtworks = [
       verified: true
     },
     category: "Abstract & Generative",
-    price: 23200,
+    price: 2300,
     ethPrice: 0.12,
     image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=85",
     resolution: "5760 × 3240 (6K)",
