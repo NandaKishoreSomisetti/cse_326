@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ArtMart — Digital Art Marketplace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='3' y='3' width='42' height='42' rx='3' fill='%23fff' stroke='%23b8913a' stroke-width='4'/%3E%3Cpath d='M12 35 L21 21 L27 29 L31 24 L36 35 Z' fill='%231b2a41'/%3E%3Ccircle cx='30' cy='16' r='3.2' fill='%23b8913a'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,13 +14,13 @@
   <!-- NAVBAR -->
   <header class="navbar">
     <div class="container nav-inner">
-      <a href="#" class="logo" data-view="shop">Art<span>Mart</span></a>
+      <a href="#" class="logo" data-view="shop"><svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true"><rect class="lm-frame" x="3" y="3" width="42" height="42" rx="3"/><rect class="lm-inner" x="9" y="9" width="30" height="30"/><path class="lm-hill" d="M12 35 L21 21 L27 29 L31 24 L36 35 Z"/><circle class="lm-sun" cx="30" cy="16" r="3.2"/></svg><span class="logo-text">Art<span>Mart</span></span></a>
       <input type="search" id="search" class="search" data-i18n-ph="search" placeholder="Search art or artist...">
       <nav class="nav-links">
         <button class="link" data-view="shop" data-i18n="shop">Shop</button>
         <button class="link admin-only hidden" data-view="admin" data-i18n="admin">Admin</button>
         <select id="langSel" class="lang-select" title="Language"></select>
-        <button class="link" id="themeBtn" title="Toggle theme">☀️</button>
+        <button class="link" id="themeBtn" title="Toggle theme">🌙</button>
         <button class="link" id="cartBtn"><span data-i18n="cart">Cart</span> <span class="badge" id="cartCount">0</span></button>
         <button class="btn btn-small" id="authBtn">Login</button>
       </nav>
@@ -31,6 +32,11 @@
     <!-- SHOP VIEW -->
     <section id="view-shop" class="view">
       <div class="hero" id="hero"></div>
+
+      <div class="section-title">
+        <h2 data-i18n="collection">The Collection</h2>
+        <p data-i18n="collectionSub">Hand-picked digital artworks from independent artists</p>
+      </div>
 
       <div class="filters">
         <div class="pills" id="pills"></div>
@@ -53,7 +59,19 @@
 
     <!-- AUTH VIEW (shown first) -->
     <section id="view-auth" class="view hidden">
+      <div class="welcome">
+        <h1><span data-i18n="welcome">Welcome to</span> <span>ArtMart</span></h1>
+        <p data-i18n="welcomeSub">Discover, collect and own original digital art.</p>
+      </div>
+      <div class="auth-wrap">
+      <div class="collage">
+        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=400&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=400&q=70" alt="">
+        <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=400&q=70" alt="">
+      </div>
       <div class="card auth-card">
+        <div class="auth-lang"><span data-i18n="language">Language</span>: <span id="authLangs"></span></div>
         <div class="tabs">
           <button class="tab active" data-tab="login" data-i18n="login">Login</button>
           <button class="tab" data-tab="register" data-i18n="register">Register</button>
@@ -90,6 +108,7 @@
           <button class="btn btn-outline" data-demo="collector" data-i18n="collectorDemo">Collector demo</button>
           <button class="btn btn-outline" data-demo="admin" data-i18n="adminDemo">Admin demo</button>
         </div>
+      </div>
       </div>
     </section>
 
@@ -136,6 +155,15 @@
       <div id="cartItems" class="cart-items"></div>
       <div class="cart-summary" id="cartSummary"></div>
     </aside>
+  </div>
+
+  <!-- LOGIN → MAIN PAGE TRANSITION -->
+  <div class="splash hidden" id="splash">
+    <div class="splash-inner">
+      <svg class="logo-mark big" viewBox="0 0 48 48" aria-hidden="true"><rect class="lm-frame" x="3" y="3" width="42" height="42" rx="3"/><rect class="lm-inner" x="9" y="9" width="30" height="30"/><path class="lm-hill" d="M12 35 L21 21 L27 29 L31 24 L36 35 Z"/><circle class="lm-sun" cx="30" cy="16" r="3.2"/></svg>
+      <div class="splash-title">Art<span>Mart</span></div>
+      <p class="splash-msg" id="splashMsg"></p>
+    </div>
   </div>
 
   <div class="toast hidden" id="toast"></div>

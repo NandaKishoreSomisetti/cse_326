@@ -69,7 +69,7 @@ function renderHero() {
   const art = artworks.find((a) => a.featured) || artworks[0];
   if (!art) { $("#hero").innerHTML = "<p class='muted'>No artworks yet.</p>"; return; }
   $("#hero").innerHTML = `
-    <img src="${small(art.image, 900)}" alt="${esc(art.title)}">
+    <div class="frame"><img src="${small(art.image, 900)}" alt="${esc(art.title)}"></div>
     <div>
       <span class="tag">${t("spotlight")}</span>
       <h1>${esc(art.title)}</h1>
@@ -142,7 +142,7 @@ function openDetail(id) {
   openModal(`
     <div class="detail">
       <div>
-        <img class="main" src="${small(a.image, 900)}" alt="${esc(a.title)}">
+        <div class="frame"><img src="${small(a.image, 900)}" alt="${esc(a.title)}"></div>
         <div class="bio"><strong>${esc(a.artist.name)}</strong><br>${esc(a.artist.bio || "Digital artist.")}</div>
       </div>
       <div>
@@ -190,27 +190,27 @@ function submitReview(id) {
   const a = findArt(id);
   const text = $("#reviewText").value.trim();
   const err = $("#reviewErr");
-  if (!user) { err.textContent = "Please log in to write a review."; return; }
-  if (!pickedRating) { err.textContent = "Please select a star rating."; return; }
-  if (text.length < 5) { err.textContent = "Review must be at least 5 characters."; return; }
+  if (!user) { err.textContent = t("errLoginReview"); return; }
+  if (!pickedRating) { err.textContent = t("errStar"); return; }
+  if (text.length < 5) { err.textContent = t("errReviewLen"); return; }
 
   a.reviews = a.reviews || [];
   a.reviews.unshift({ id: "rev-" + Date.now(), user: user.name, rating: pickedRating, date: "Just now", comment: text });
   a.rating = (a.rating * a.reviewCount + pickedRating) / (a.reviewCount + 1);
   a.reviewCount += 1;
   save();
-  toast("Review added. Thank you!");
+  toast(t("tReview"));
   openDetail(id);
   renderGrid();
 }
 
 // ---------- Cart ----------
 function addToCart(id) {
-  if (cart.some((c) => c.id === id)) { toast("Already in your cart"); return; }
+  if (cart.some((c) => c.id === id)) { toast(t("tAlready")); return; }
   cart.push({ id, license: "personal" });
   save();
   renderNav();
-  toast("Added to cart");
+  toast(t("tAdded"));
 }
 
 function cartTotals() {
@@ -257,7 +257,7 @@ function renderCart() {
 }
 
 function setLicense(i, value) { cart[i].license = value; save(); renderCart(); }
-function removeFromCart(i) { cart.splice(i, 1); save(); renderCart(); toast("Removed from cart"); }
+function removeFromCart(i) { cart.splice(i, 1); save(); renderCart(); toast(t("tRemoved")); }
 function openCart() { renderCart(); $("#cartOverlay").classList.remove("hidden"); }
 function closeCart() { $("#cartOverlay").classList.add("hidden"); }
 
@@ -291,8 +291,8 @@ function startCheckout() {
                 bCity: $("#bCity").value.trim(), bCountry: $("#bCountry").value.trim() };
     let ok = true;
     for (const k in f) {
-      let msg = f[k] ? "" : "This field is required.";
-      if (k === "bEmail" && f[k] && !EMAIL_RE.test(f[k])) msg = "Enter a valid email.";
+      let msg = f[k] ? "" : t("errRequired");
+      if (k === "bEmail" && f[k] && !EMAIL_RE.test(f[k])) msg = t("errEmail");
       $("#" + k + "Err").textContent = msg;
       if (msg) ok = false;
     }
@@ -330,9 +330,9 @@ function paymentStep() {
   $("#payBtn").addEventListener("click", () => {
     const v = $("#payInput").value.trim();
     let msg = "";
-    if (payMethod === "Card" && v.replace(/\s/g, "").length !== 16) msg = "Card number must be 16 digits.";
-    if (payMethod === "UPI" && !/^[\w.-]+@[\w]+$/.test(v)) msg = "Enter a valid UPI ID (e.g. name@upi).";
-    if (payMethod === "Crypto Wallet" && !/^0x[a-fA-F0-9]{8,}$/.test(v)) msg = "Enter a valid wallet address starting with 0x.";
+    if (payMethod === "Card" && v.replace(/\s/g, "").length !== 16) msg = t("errCard");
+    if (payMethod === "UPI" && !/^[\w.-]+@[\w]+$/.test(v)) msg = t("errUpi");
+    if (payMethod === "Crypto Wallet" && !/^0x[a-fA-F0-9]{8,}$/.test(v)) msg = t("errWallet");
     $("#payErr").textContent = msg;
     if (!msg) placeOrder();
   });
@@ -360,7 +360,7 @@ function placeOrder() {
       <table>
         <tr><th>Artwork</th><th>License</th><th>Price</th><th></th></tr>
         ${order.items.map((i) => `<tr><td>${esc(i.title)}</td><td>${i.license}</td><td>${money(i.price)}</td>
-          <td><button class="btn btn-outline" onclick="toast('Download started (demo)')">${t("download")}</button></td></tr>`).join("")}
+          <td><button class="btn btn-outline" onclick="toast(t('tDownload'))">${t("download")}</button></td></tr>`).join("")}
         <tr><td colspan="2"><strong>${t("totalPaid")}</strong></td><td colspan="2"><strong>${money(order.total)}</strong></td></tr>
       </table>
       <br><button class="btn" onclick="window.print()">${t("print")}</button>
@@ -378,8 +378,19 @@ function login(u) {
   user = { name: u.name, email: u.email, role: u.role };
   save();
   renderNav();
-  toast("Welcome, " + user.name + "!");
-  showView(user.role === "admin" ? "admin" : "shop");
+  playSplash(t("welcome") + ", " + user.name + "!", () => showView(user.role === "admin" ? "admin" : "shop"));
+}
+
+// Logo animation shown when moving from the login page to the main page
+function playSplash(message, onSwitch) {
+  const sp = $("#splash");
+  $("#splashMsg").textContent = message;
+  sp.classList.remove("hidden", "leaving");
+  void sp.offsetWidth;                          // restart CSS animations
+  sp.classList.add("playing");
+  setTimeout(onSwitch, 1100);                   // switch page behind the splash
+  setTimeout(() => sp.classList.add("leaving"), 1500);
+  setTimeout(() => sp.classList.add("hidden"), 2000);
 }
 
 function setupAuth() {
@@ -393,11 +404,11 @@ function setupAuth() {
     e.preventDefault();
     const email = $("#loginEmail").value.trim().toLowerCase();
     const pass = $("#loginPass").value;
-    let ok = setErr("loginEmailErr", !email ? "Email is required." : !EMAIL_RE.test(email) ? "Enter a valid email." : "");
-    ok = setErr("loginPassErr", pass ? "" : "Password is required.") && ok;
+    let ok = setErr("loginEmailErr", !email ? t("errEmailReq") : !EMAIL_RE.test(email) ? t("errEmail") : "");
+    ok = setErr("loginPassErr", pass ? "" : t("errPassReq")) && ok;
     if (!ok) return;
     const found = users.find((u) => u.email === email);
-    if (!found || found.password !== pass) { setErr("loginPassErr", "Wrong email or password."); return; }
+    if (!found || found.password !== pass) { setErr("loginPassErr", t("errWrong")); return; }
     e.target.reset();
     login(found);
   });
@@ -408,11 +419,11 @@ function setupAuth() {
     const email = $("#regEmail").value.trim().toLowerCase();
     const pass = $("#regPass").value;
     const confirm = $("#regConfirm").value;
-    let ok = setErr("regNameErr", name.length < 2 ? "Enter your name." : "");
-    ok = setErr("regEmailErr", !EMAIL_RE.test(email) ? "Enter a valid email." :
-      users.some((u) => u.email === email) ? "This email is already registered." : "") && ok;
-    ok = setErr("regPassErr", STRONG_RE.test(pass) ? "" : "Min 8 chars with uppercase, lowercase and a number.") && ok;
-    ok = setErr("regConfirmErr", confirm && confirm === pass ? "" : "Passwords do not match.") && ok;
+    let ok = setErr("regNameErr", name.length < 2 ? t("errName") : "");
+    ok = setErr("regEmailErr", !EMAIL_RE.test(email) ? t("errEmail") :
+      users.some((u) => u.email === email) ? t("errExists") : "") && ok;
+    ok = setErr("regPassErr", STRONG_RE.test(pass) ? "" : t("errStrong")) && ok;
+    ok = setErr("regConfirmErr", confirm && confirm === pass ? "" : t("errMatch")) && ok;
     if (!ok) return;
     const u = { name, email, password: pass, role: $("#regRole").value };
     users.push(u);
@@ -447,43 +458,43 @@ function toggleFeatured(id, value) {
   findArt(id).featured = value;
   save();
   renderShop();
-  toast(value ? "Marked as featured" : "Removed from featured");
+  toast(value ? t("tFeatured") : t("tUnfeatured"));
 }
 
 function artForm(id) {
   const a = id ? findArt(id) : null;
   const cats = CATEGORIES.filter((c) => c !== "All");
   openModal(`
-    <h2>${a ? "Edit Artwork" : "Add New Artwork"}</h2>
+    <h2>${a ? t("editArt") : t("newArt")}</h2>
     <form id="artForm" novalidate>
       <div class="form-grid">
-        <div><label>Title <input id="fTitle" value="${a ? esc(a.title) : ""}"></label><small class="error" id="fTitleErr"></small></div>
-        <div><label>Artist <input id="fArtist" value="${a ? esc(a.artist.name) : ""}"></label><small class="error" id="fArtistErr"></small></div>
-        <div><label>Category <select id="fCat">${cats.map((c) => `<option ${a && a.category === c ? "selected" : ""}>${c}</option>`).join("")}</select></label></div>
-        <div><label>Price ($) <input id="fPrice" type="number" min="1" value="${a ? a.price : ""}"></label><small class="error" id="fPriceErr"></small></div>
-        <div class="wide"><label>Image URL <input id="fImg" value="${a ? esc(a.image) : ""}" placeholder="https://..."></label><small class="error" id="fImgErr"></small></div>
-        <div class="wide"><label>Description <textarea id="fDesc" rows="3">${a ? esc(a.description) : ""}</textarea></label><small class="error" id="fDescErr"></small></div>
-        <div class="wide"><label><input type="checkbox" id="fFeat" style="width:auto" ${a && a.featured ? "checked" : ""}> Featured artwork</label></div>
+        <div><label>${t("fTitle")} <input id="fTitle" value="${a ? esc(a.title) : ""}"></label><small class="error" id="fTitleErr"></small></div>
+        <div><label>${t("fArtist")} <input id="fArtist" value="${a ? esc(a.artist.name) : ""}"></label><small class="error" id="fArtistErr"></small></div>
+        <div><label>${t("thCat")} <select id="fCat">${cats.map((c) => `<option value="${c}" ${a && a.category === c ? "selected" : ""}>${t(c)}</option>`).join("")}</select></label></div>
+        <div><label>${t("fPrice")} <input id="fPrice" type="number" min="1" value="${a ? a.price : ""}"></label><small class="error" id="fPriceErr"></small></div>
+        <div class="wide"><label>${t("fImg")} <input id="fImg" value="${a ? esc(a.image) : ""}" placeholder="https://..."></label><small class="error" id="fImgErr"></small></div>
+        <div class="wide"><label>${t("fDesc")} <textarea id="fDesc" rows="3">${a ? esc(a.description) : ""}</textarea></label><small class="error" id="fDescErr"></small></div>
+        <div class="wide"><label><input type="checkbox" id="fFeat" style="width:auto" ${a && a.featured ? "checked" : ""}> ${t("fFeat")}</label></div>
       </div>
-      <button class="btn full" type="submit">${a ? "Save Changes" : "Add Artwork"}</button>
+      <button class="btn full" type="submit">${a ? t("saveChanges") : t("addArtBtn")}</button>
     </form>`);
 
   $("#artForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const title = $("#fTitle").value.trim(), artist = $("#fArtist").value.trim();
     const price = parseFloat($("#fPrice").value), img = $("#fImg").value.trim(), desc = $("#fDesc").value.trim();
-    let ok = setErr("fTitleErr", title.length < 3 ? "Title must be at least 3 characters." : "");
-    ok = setErr("fArtistErr", artist ? "" : "Artist name is required.") && ok;
-    ok = setErr("fPriceErr", price > 0 ? "" : "Enter a price greater than 0.") && ok;
-    ok = setErr("fImgErr", /^https?:\/\/.+/.test(img) ? "" : "Enter a valid image URL (http/https).") && ok;
-    ok = setErr("fDescErr", desc.length < 10 ? "Description must be at least 10 characters." : "") && ok;
+    let ok = setErr("fTitleErr", title.length < 3 ? t("errTitle") : "");
+    ok = setErr("fArtistErr", artist ? "" : t("errArtist")) && ok;
+    ok = setErr("fPriceErr", price > 0 ? "" : t("errPrice")) && ok;
+    ok = setErr("fImgErr", /^https?:\/\/.+/.test(img) ? "" : t("errImg")) && ok;
+    ok = setErr("fDescErr", desc.length < 10 ? t("errDesc") : "") && ok;
     if (!ok) return;
 
     const data = { title, category: $("#fCat").value, price, image: img, description: desc, featured: $("#fFeat").checked };
     if (a) {
       Object.assign(a, data);
       a.artist.name = artist;
-      toast("Artwork updated");
+      toast(t("tUpdated"));
     } else {
       artworks.unshift({
         id: "art-" + Date.now(), ...data,
@@ -491,7 +502,7 @@ function artForm(id) {
         resolution: "3840 × 2160 (4K)", format: "PNG", fileSize: "25 MB",
         rating: 0, reviewCount: 0, reviews: []
       });
-      toast("Artwork added");
+      toast(t("tArtAdded"));
     }
     save();
     closeModal();
@@ -503,10 +514,10 @@ function artForm(id) {
 function confirmDelete(id) {
   const a = findArt(id);
   openModal(`
-    <h2>Delete artwork?</h2>
-    <p style="margin:12px 0">Are you sure you want to delete <strong>${esc(a.title)}</strong>? This cannot be undone.</p>
-    <button class="btn btn-danger" onclick="deleteArt('${id}')">Yes, delete</button>
-    <button class="btn btn-outline" data-close>Cancel</button>`);
+    <h2>${t("delTitle")}</h2>
+    <p style="margin:12px 0">${t("delSure")} <strong>${esc(a.title)}</strong>? ${t("delNote")}</p>
+    <button class="btn btn-danger" onclick="deleteArt('${id}')">${t("delYes")}</button>
+    <button class="btn btn-outline" data-close>${t("cancel")}</button>`);
 }
 
 function deleteArt(id) {
@@ -517,7 +528,7 @@ function deleteArt(id) {
   renderAdmin();
   renderShop();
   renderNav();
-  toast("Artwork deleted");
+  toast(t("tDeleted"));
 }
 
 // ---------- Events ----------
@@ -525,7 +536,7 @@ function setupEvents() {
   $$("[data-view]").forEach((b) => b.addEventListener("click", (e) => { e.preventDefault(); showView(b.dataset.view); }));
 
   $("#authBtn").addEventListener("click", () => {
-    if (user) { user = null; save(); renderNav(); toast("Logged out"); }
+    if (user) { user = null; save(); renderNav(); toast(t("tLoggedOut")); }
     showView("auth");
   });
 
@@ -550,23 +561,31 @@ function setupEvents() {
     save();
     renderAdmin();
     renderShop();
-    toast("Catalogue reset to default");
+    toast(t("tReset"));
   });
 
   $("#themeBtn").addEventListener("click", () => {
-    document.body.classList.toggle("light");
-    const light = document.body.classList.contains("light");
-    $("#themeBtn").textContent = light ? "🌙" : "☀️";
-    store.set("am_theme", light ? "light" : "dark");
+    document.body.classList.toggle("dark");
+    const dark = document.body.classList.contains("dark");
+    $("#themeBtn").textContent = dark ? "☀️" : "🌙";
+    store.set("am_theme", dark ? "dark" : "light");
   });
 }
 
 // ---------- Init ----------
 function init() {
-  if (store.get("am_theme", "dark") === "light") { document.body.classList.add("light"); $("#themeBtn").textContent = "🌙"; }
+  if (store.get("am_theme", "light") === "dark") { document.body.classList.add("dark"); $("#themeBtn").textContent = "☀️"; }
   $("#langSel").innerHTML = Object.keys(LANGS).map((k) => `<option value="${k}" ${k === lang ? "selected" : ""}>${LANGS[k]}</option>`).join("");
+  $("#authLangs").innerHTML = Object.keys(LANGS).map((k) => `<button type="button" class="lang-chip" data-lang="${k}">${LANGS[k]}</button>`).join("");
+  $("#authLangs").addEventListener("click", (e) => {
+    if (!e.target.dataset.lang) return;
+    $("#langSel").value = e.target.dataset.lang;
+    $("#langSel").dispatchEvent(new Event("change"));
+  });
   $("#langSel").addEventListener("change", (e) => {
     lang = e.target.value;
+    $$(".error").forEach((el) => (el.textContent = ""));
+    $$(".lang-chip").forEach((c) => c.classList.toggle("active", c.dataset.lang === lang));
     try { localStorage.setItem("am_lang", lang); } catch (err) {}
     applyLang();
     closeModal();
@@ -576,6 +595,7 @@ function init() {
     if (user && user.role === "admin") renderAdmin();
   });
   applyLang();
+  $$(".lang-chip").forEach((c) => c.classList.toggle("active", c.dataset.lang === lang));
   setupAuth();
   setupEvents();
   renderNav();
