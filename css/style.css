@@ -337,9 +337,6 @@ td .btn { padding: 5px 10px; font-size: 13px; }
 /* Logo text fix + login language chips */
 .logo .logo-text { color: var(--text); font-style: normal; }
 .logo .logo-text span { color: var(--gold); font-style: italic; }
-.auth-lang { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-.lang-chip { background: var(--bg-soft); border: 1px solid var(--border); color: var(--text); border-radius: 999px; padding: 3px 12px; font-size: 13px; }
-.lang-chip.active { background: var(--gold); border-color: var(--gold); color: #fff; }
 
 /* ---------- About Us ---------- */
 .about-hero {

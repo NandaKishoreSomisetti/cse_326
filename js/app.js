@@ -582,16 +582,9 @@ function setupEvents() {
 function init() {
   if (store.get("am_theme", "light") === "dark") { document.body.classList.add("dark"); $("#themeBtn").textContent = "☀️"; }
   $("#langSel").innerHTML = Object.keys(LANGS).map((k) => `<option value="${k}" ${k === lang ? "selected" : ""}>${LANGS[k]}</option>`).join("");
-  $("#authLangs").innerHTML = Object.keys(LANGS).map((k) => `<button type="button" class="lang-chip" data-lang="${k}">${LANGS[k]}</button>`).join("");
-  $("#authLangs").addEventListener("click", (e) => {
-    if (!e.target.dataset.lang) return;
-    $("#langSel").value = e.target.dataset.lang;
-    $("#langSel").dispatchEvent(new Event("change"));
-  });
   $("#langSel").addEventListener("change", (e) => {
     lang = e.target.value;
     $$(".error").forEach((el) => (el.textContent = ""));
-    $$(".lang-chip").forEach((c) => c.classList.toggle("active", c.dataset.lang === lang));
     try { localStorage.setItem("am_lang", lang); } catch (err) {}
     applyLang();
     closeModal();
@@ -601,7 +594,6 @@ function init() {
     if (user && user.role === "admin") renderAdmin();
   });
   applyLang();
-  $$(".lang-chip").forEach((c) => c.classList.toggle("active", c.dataset.lang === lang));
   setupAuth();
   setupEvents();
   renderNav();
