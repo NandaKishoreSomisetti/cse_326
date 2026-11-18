@@ -3,6 +3,7 @@ const LANGS = { en: "English", hi: "हिन्दी", te: "తెలుగు
 
 const TEXT = {
   en: {
+    showPw: "Show password", hidePw: "Hide password",
     vaGreet: "Hi! How can I help you?",
     vaTitle: "Voice Assistant", vaHello: "Hi! I'm your ArtMart assistant. Tap 🎤 and speak, or type a command below.", vaTry: "Try saying:", vaPh: "Type a command...", vaListening: "Listening… speak now", vaUnsupported: "Voice input is not supported in this browser (use Chrome, Edge or Safari). You can type a command instead.", vaNotUnderstood: "Sorry, I didn't understand. Say \"help\" to hear what I can do.", vaHelp: "You can say: show photography, search Kenji, under 3000, sort cheapest, top rated, open cart, add to cart, checkout, about us, dark mode, or change language to Hindi.", vaShowing: "Showing", vaSearching: "Searching for", vaCartOpen: "Opening your cart", vaCheckout: "Starting checkout", vaSorted: "Sorted by", vaAbout: "Opening About Us", vaShop: "Opening the gallery", vaAdmin: "Opening the Admin Dashboard", vaNoAdmin: "The Admin Dashboard is only for admin accounts.", vaLang: "Language changed to English.", vaDark: "Dark mode is on.", vaLight: "Light mode is on.", vaUnder: "Showing artworks under", vaSpotlight: "Today's spotlight is", vaClosed: "Closed.", vaLoginFirst: "Please log in first.", vaMicBlocked: "Microphone access is blocked. Please allow the microphone in your browser, or type a command.", vaNoSpeech: "I didn't hear anything. Tap 🎤 and try again.",
     startPrice: "Starting price",
@@ -36,6 +37,7 @@ const TEXT = {
     footer: "© 2026 ArtMart · CSE 326 Project · HTML, CSS & JavaScript"
   },
   hi: {
+    showPw: "पासवर्ड दिखाएँ", hidePw: "पासवर्ड छिपाएँ",
     vaGreet: "नमस्ते! मैं आपकी क्या मदद करूँ?",
     vaTitle: "वॉइस असिस्टेंट", vaHello: "नमस्ते! मैं आपका ArtMart असिस्टेंट हूँ। 🎤 दबाकर बोलें, या नीचे कमांड लिखें।", vaTry: "ऐसे बोलकर देखें:", vaPh: "कमांड लिखें...", vaListening: "सुन रहा हूँ… अब बोलें", vaUnsupported: "इस ब्राउज़र में वॉइस इनपुट नहीं चलता (Chrome, Edge या Safari इस्तेमाल करें)। आप कमांड लिख भी सकते हैं।", vaNotUnderstood: "माफ़ कीजिए, मैं समझ नहीं पाया। \"मदद\" बोलकर मेरे कमांड सुनें।", vaHelp: "आप बोल सकते हैं: फोटोग्राफी दिखाओ, Kenji खोजें, 3000 से कम, सबसे सस्ता, रेटिंग, कार्ट खोलो, कार्ट में डालो, चेकआउट, हमारे बारे में, डार्क मोड, या भाषा तेलुगु।", vaShowing: "दिखा रहा हूँ:", vaSearching: "खोज रहा हूँ:", vaCartOpen: "आपका कार्ट खोल रहा हूँ", vaCheckout: "चेकआउट शुरू कर रहा हूँ", vaSorted: "क्रम बदला गया", vaAbout: "हमारे बारे में खोल रहा हूँ", vaShop: "गैलरी खोल रहा हूँ", vaAdmin: "एडमिन डैशबोर्ड खोल रहा हूँ", vaNoAdmin: "एडमिन डैशबोर्ड सिर्फ़ एडमिन खातों के लिए है।", vaLang: "भाषा हिन्दी कर दी गई है।", vaDark: "डार्क मोड चालू है।", vaLight: "लाइट मोड चालू है।", vaUnder: "इतने से कम की कलाकृतियाँ:", vaSpotlight: "आज का स्पॉटलाइट है", vaClosed: "बंद कर दिया।", vaLoginFirst: "कृपया पहले लॉगिन करें।", vaMicBlocked: "माइक्रोफ़ोन की अनुमति बंद है। ब्राउज़र में माइक्रोफ़ोन की अनुमति दें, या कमांड लिखें।", vaNoSpeech: "मुझे कुछ सुनाई नहीं दिया। 🎤 दबाकर फिर से बोलें।",
     startPrice: "शुरुआती मूल्य",
@@ -69,6 +71,7 @@ const TEXT = {
     footer: "© 2026 ArtMart · CSE 326 प्रोजेक्ट · HTML, CSS और JavaScript"
   },
   te: {
+    showPw: "పాస్‌వర్డ్ చూపించు", hidePw: "పాస్‌వర్డ్ దాచు",
     vaGreet: "నమస్తే! నేను మీకు ఎలా సహాయం చేయగలను?",
     vaTitle: "వాయిస్ అసిస్టెంట్", vaHello: "నమస్తే! నేను మీ ArtMart అసిస్టెంట్‌ని. 🎤 నొక్కి మాట్లాడండి, లేదా కింద కమాండ్ టైప్ చేయండి.", vaTry: "ఇలా చెప్పి చూడండి:", vaPh: "కమాండ్ టైప్ చేయండి...", vaListening: "వింటున్నాను… ఇప్పుడు మాట్లాడండి", vaUnsupported: "ఈ బ్రౌజర్‌లో వాయిస్ ఇన్‌పుట్ పనిచేయదు (Chrome, Edge లేదా Safari వాడండి). మీరు కమాండ్ టైప్ కూడా చేయవచ్చు.", vaNotUnderstood: "క్షమించండి, నాకు అర్థం కాలేదు. నా కమాండ్లు వినడానికి \"సహాయం\" అని చెప్పండి.", vaHelp: "మీరు ఇలా చెప్పవచ్చు: ఫోటోగ్రఫీ చూపించు, Kenji వెతుకు, 3000 కంటే తక్కువ, తక్కువ ధర, రేటింగ్, కార్ట్ తెరువు, కార్ట్‌కు జోడించు, చెక్అవుట్, మా గురించి, డార్క్ మోడ్, లేదా భాష హిందీ.", vaShowing: "చూపిస్తున్నాను:", vaSearching: "వెతుకుతున్నాను:", vaCartOpen: "మీ కార్ట్ తెరుస్తున్నాను", vaCheckout: "చెక్అవుట్ ప్రారంభిస్తున్నాను", vaSorted: "క్రమం మార్చబడింది", vaAbout: "మా గురించి పేజీ తెరుస్తున్నాను", vaShop: "గ్యాలరీ తెరుస్తున్నాను", vaAdmin: "అడ్మిన్ డాష్‌బోర్డ్ తెరుస్తున్నాను", vaNoAdmin: "అడ్మిన్ డాష్‌బోర్డ్ అడ్మిన్ ఖాతాలకు మాత్రమే.", vaLang: "భాష తెలుగుకు మార్చబడింది.", vaDark: "డార్క్ మోడ్ ఆన్ అయింది.", vaLight: "లైట్ మోడ్ ఆన్ అయింది.", vaUnder: "ఈ ధర లోపు కళాఖండాలు:", vaSpotlight: "నేటి స్పాట్‌లైట్", vaClosed: "మూసివేశాను.", vaLoginFirst: "దయచేసి ముందుగా లాగిన్ అవ్వండి.", vaMicBlocked: "మైక్రోఫోన్ అనుమతి లేదు. బ్రౌజర్‌లో మైక్రోఫోన్‌ను అనుమతించండి, లేదా కమాండ్ టైప్ చేయండి.", vaNoSpeech: "నాకు ఏమీ వినిపించలేదు. 🎤 నొక్కి మళ్ళీ ప్రయత్నించండి.",
     startPrice: "ప్రారంభ ధర",

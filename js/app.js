@@ -67,6 +67,7 @@ function renderNav() {
   $("#authBtn").textContent = user ? t("logout") + " (" + user.name.split(" ")[0] + ")" : t("login");
   $$(".admin-only").forEach((el) => el.classList.toggle("hidden", !user || user.role !== "admin"));
   $("#cartCount").textContent = cart.length;
+  updateEyeTitles();
 }
 
 // ---------- Hero ----------
@@ -380,6 +381,7 @@ const STRONG_RE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 function setErr(id, msg) { $("#" + id).textContent = msg; return !msg; }
 
 function login(u) {
+  hideAllPasswords();
   user = { name: u.name, email: u.email, role: u.role };
   save();
   renderNav();
@@ -398,7 +400,67 @@ function playSplash(message, onSwitch) {
   setTimeout(() => sp.classList.add("hidden"), 1300);
 }
 
+// ---------- Show / hide password (animated eye) ----------
+const EYE_SVG = `<svg viewBox="0 0 24 24" aria-hidden="true">
+  <path class="eye-shape" d="M2 12 C 5 6.5, 19 6.5, 22 12 C 19 17.5, 5 17.5, 2 12 Z"/>
+  <g class="eye-ball"><circle class="iris" cx="12" cy="12" r="3.6"/><circle class="pupil" cx="12" cy="12" r="1.6"/><circle class="glint" cx="13.2" cy="10.8" r=".6"/></g>
+  <path class="lid" d="M2 12 C 5 17.5, 19 17.5, 22 12"/>
+  <g class="lashes"><path d="M5 15.2 L3.6 17"/><path d="M9 16.6 L8.4 18.8"/><path d="M15 16.6 L15.6 18.8"/><path d="M19 15.2 L20.4 17"/></g>
+</svg>`;
+
+function setupPasswordEyes() {
+  $$("#view-auth input[type=password]").forEach((input) => {
+    const wrap = document.createElement("span");
+    wrap.className = "pw-wrap";
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "pw-eye";
+    btn.innerHTML = EYE_SVG;
+    wrap.appendChild(btn);
+
+    const look = () => {   // pupil follows the typing (moves right as the password grows)
+      const n = Math.min(input.value.length, 16);
+      btn.style.setProperty("--look", (n / 16 * 6 - 3).toFixed(2) + "px");
+    };
+    input.addEventListener("input", look);
+    look();
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      btn.classList.toggle("open", show);
+      updateEyeTitles();
+      input.focus();
+      const end = input.value.length;
+      try { input.setSelectionRange(end, end); } catch (err) {}
+    });
+  });
+  updateEyeTitles();
+}
+
+function updateEyeTitles() {
+  $$(".pw-eye").forEach((b) => {
+    const open = b.classList.contains("open");
+    const label = open ? t("hidePw") : t("showPw");
+    b.title = label;
+    b.setAttribute("aria-label", label);
+    b.setAttribute("aria-pressed", open);
+  });
+}
+
+function hideAllPasswords() {
+  $$(".pw-eye.open").forEach((b) => {
+    b.classList.remove("open");
+    b.parentNode.querySelector("input").type = "password";
+  });
+  updateEyeTitles();
+}
+
 function setupAuth() {
+  setupPasswordEyes();
   $$(".tab").forEach((t) => t.addEventListener("click", () => {
     $$(".tab").forEach((x) => x.classList.toggle("active", x === t));
     $("#loginForm").classList.toggle("hidden", t.dataset.tab !== "login");
