@@ -4,7 +4,7 @@ A simple, clean digital art marketplace built with **plain HTML, CSS and JavaScr
 Theme: Modern Gallery — off-white / cream canvas (#F9F8F6, #F4F0E2), deep charcoal text (#1A1A1A) and terracotta call-to-action accent (#C86D51); optional dark mode.
 
 ## 🌐 Live Link
-👉 **https://falls-sound-temporal-drinks.trycloudflare.com**
+👉 **https://glossary-trackback-alternative-ash.trycloudflare.com**
 
 ## Features
 - **Logo & animation** — framed-landscape logo; after login, the logo draws itself on a welcome splash and fades into the main page.
